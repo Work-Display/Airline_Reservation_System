@@ -1,0 +1,292 @@
+{
+	"info": {
+		"_postman_id": "8f0bf6aa-41f6-410f-978f-a4c1f7ebbb08",
+		"name": "Facade Base",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26234328"
+	},
+	"item": [
+		{
+			"name": "Get All Flights",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/flight-for-all/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"flight-for-all",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Flight By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/flight-for-all/1/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"flight-for-all",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Flight By Parameters",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "origin_country_id_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "destination_country_id_id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "departure_time",
+							"value": "2023-08-21 23:26",
+							"type": "text"
+						},
+						{
+							"key": "landing_time",
+							"value": "2023-08-22 02:26",
+							"type": "text"
+						},
+						{
+							"key": "remaining_tickets",
+							"value": "54",
+							"type": "text"
+						},
+						{
+							"key": "airline_company_id_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/get_flights_by_parameters/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"get_flights_by_parameters",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Airlines",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/airline-for-all/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"airline-for-all",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Airline By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/airline-for-all/1/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"airline-for-all",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Airline By Parameters",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "country_id_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Purrfect Fluffy Clouds",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/get_airlines_by_parameters/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"get_airlines_by_parameters",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Countries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/country-for-all/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"country-for-all",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Country By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/models/country-for-all/1/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"models",
+						"country-for-all",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Postuser2",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "API1234",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "Postuser2@post.mail",
+							"type": "text"
+						},
+						{
+							"key": "thumbnail",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ars-api.azurewebsites.net/api/signup/",
+					"protocol": "https",
+					"host": [
+						"ars-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"signup",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

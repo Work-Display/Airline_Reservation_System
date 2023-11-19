@@ -1,0 +1,1 @@
+default_app_config = 'airline_reservation_system.apps.AirlineReservationSystemConfig'

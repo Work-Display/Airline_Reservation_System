@@ -1,0 +1,13 @@
+###
+
+POST http://127.0.0.1:8000/#/api/api_login_create
+Content-Type: application/json
+Authorization: {{$aadV2Token}}
+
+{ "username": "Cat", "password": "Pass1234!" }
+
+###
+
+GET http://127.0.0.1:8000/#/api/api_test_token_retrieve
+Content-Type: application/json
+Authorization: token xxx
