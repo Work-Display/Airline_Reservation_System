@@ -2,6 +2,7 @@ from django.test import TestCase
 import pytest
 from airline_reservation_system.utiles import *
 
+
 # @pytest.mark.now
 @pytest.mark.skip
 class Test_Val_Add_User(TestCase):
@@ -51,6 +52,19 @@ class Test_Populate_All(TestCase):
         assert(populate_all())
         ticket = Tickets.objects.get(id=1)
         assert(ticket)
+
+
+# pytest .\airline_reservation_system\test_utiles.py::Test_Randomly_Populate_Users
+# @pytest.mark.skip
+class Test_Randomly_Populate_Users(TestCase):
+
+    @pytest.mark.django_db()
+    def test_randomly_populate_users(self):
+        if not(populate_user_roles()):
+            print("'populate_user_roles' failed. Can't run this test.")
+            assert(False)
+
+        assert(randomly_populate_users(amount=3, any_role=2))
 
 
 

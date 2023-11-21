@@ -621,6 +621,22 @@
 
 
 # ===========================================================================================================================
+# Random Data Generation:
+
+    # https://pynative.com/python-random-randrange/
+    # https://renatobudinich.com/create-random-images-with-randimage/
+    # https://stackoverflow.com/questions/902761/saving-a-numpy-array-as-an-image
+    # https://stackoverflow.com/questions/47290668/image-fromarray-just-produces-black-image
+    # https://pypi.org/project/randimage/
+    # https://pypi.org/project/names/   
+    # https://pypi.org/project/random-address/
+    # https://github.com/tolstislon/phone-gen
+    # https://github.com/eye9poob/python/blob/master/credit-card-numbers-generator.py
+    # https://pypi.org/project/randominfo/
+    # https://pypi.org/project/random-username/
+    # https://stackoverflow.com/questions/553303/generate-a-random-date-between-two-other-dates
+
+# ===========================================================================================================================
 # JavaScript:
 
     #

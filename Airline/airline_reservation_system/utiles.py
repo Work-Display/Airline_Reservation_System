@@ -8,7 +8,15 @@ from phonenumber_field.validators import validate_international_phonenumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import request
 import base64
-
+import numpy as np
+import random
+import names
+import phone_gen
+from randimage import get_random_image, show_array
+import matplotlib
+import random_address
+import randominfo
+from random_username.generate import generate_username
 import logging 
 logger = logging.getLogger("pick.me") 
 
@@ -690,8 +698,8 @@ They do so in order to fit the DAL's field formats, or to set default data when 
 # VALIDATE & ADD: =====================================
 def val_add_user(user_field_data:dict):
     """
-    validates and adds a user.
-    returns false if validation fails and vise versa.
+    Validates and adds a user.
+    Returns the new user object if validation succeeds, and returns False otherwise.
     Send raw unencrypted password only.
     """
 
@@ -772,13 +780,14 @@ def val_add_user(user_field_data:dict):
 
     info_msg = f"Successfully validated a user. 'username' = '{username}'."
     logger.info(info_msg)
-    if (type(DAL.add_instance(some_model=Users, field_data=data)) == str):
+    user = DAL.add_instance(some_model=Users, field_data=data)
+    if (type(user) == str):
             error_msg = f"Failed to add a user. 'username' = '{username}'."
             logger.error(error_msg)
             return False
     info_msg = f"Successfully validated and added a user. 'username' = '{username}'."
     logger.info(info_msg)
-    return True
+    return user
 
 
 def val_add_customer(customer_field_data:dict):
@@ -1064,7 +1073,6 @@ def populate_all():
     user_FD = {'username':'snobby3penguin', 'email':'monopole@verizon.net', 'password':'GbhYY8a96', 'user_role_id':2, 'thumbnail':thumbnail}
     if not(val_add_user(user_field_data=user_FD)):
         return False
-    
     thumbnail = SimpleUploadedFile(name='test_image.jpg', content=open("./web-design/static/UC6.jpg", 'rb').read(), content_type='image/jpg')
     user_FD = {'username':'giddyloser', 'email':'alias@optonline.net', 'password':'D4eeZV6RX', 'user_role_id':3, 'thumbnail':thumbnail}
     if not(val_add_user(user_field_data=user_FD)):
@@ -1104,3 +1112,245 @@ def populate_all():
  
     return True
 
+
+def get_email(username:str):
+	domains = ["gmail", "yahoo", "hotmail", "express", "yandex", "nexus", "online", "omega", "institute", "finance", "company", "corporation", "community"]
+	extensions = ['com', 'in', 'jp', 'us', 'uk', 'org', 'edu', 'au', 'de', 'co', 'me', 'biz', 'dev', 'ngo', 'site', 'xyz', 'zero', 'tech']
+	choice = random.Random().choice
+	num = random.randint(0,1000)
+	dmn = '@' + choice(domains)
+	ext = '.' + choice(extensions)
+	
+	return username+str(num)+dmn+ext
+
+def randomly_populate_users(amount:int, any_role:int):
+    """
+    Adds x "amount" of randomly generated users to the database. 
+    Returns a dictionary of the new users's data upon success, False otherwise.
+    If "any_role" is 0, only Customer users will get added.
+    If "any_role" is 1, all roles at random can get added.
+    If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
+    * Example of a successful scenario's output:  {1: {'username': 'cynicalSheep0', 'password': 'erRj49', 'user_role': 3, 'user_id': 1}, 2: {'username': 'mildVenison7', 'password': 'Iozz41', 'user_role': 2, 'user_id': 2}}
+    """
+    try:
+        amount = int(amount)
+        if amount==0:
+            amount = 1
+        if any_role==2:
+            amount = 10
+        user_cnt = 0
+        users = {}
+        for i in range(0,amount):
+            if any_role==0:
+                role = 3
+            elif any_role==1:
+                role = random.randint(1,3)
+            elif any_role==2:
+                number = i + 1
+                if number % 10 == 0:
+                    role = 1
+                elif number % 8 == 0 or number % 9 == 0:
+                    role = 2
+                # elif any(number % n == 0 for n in range(1, 8)):
+                else: 
+                    role = 3
+            else:
+                raise ValueError
+            role = int(role)
+            username = generate_username()
+            username = str(username[0])
+            email = get_email(username=username)
+            print(f"Mooooooooooooooooooooooo O: + {email = }")
+            password = randominfo.random_password(length=6, special_chars=False)
+            img_size = (128,128)
+            profile_pic = get_random_image(img_size) 
+            profile_pic = Image.fromarray((profile_pic * 255).astype('uint8')).save('././images2test/random_profiles/pic.jpg')
+            profile_pic = SimpleUploadedFile(name='test_image.jpg', content=open("././images2test/random_profiles/pic.jpg", 'rb').read(), content_type='image/jpg')
+            user_FD = {'username':username, 'email':email, 'password':password, 'user_role_id':role, 'thumbnail':profile_pic}
+            user = val_add_user(user_field_data=user_FD)
+            if not(user):
+                raise Exception
+            user_cnt += 1
+            users[user_cnt] = {"username":username, "password":password, "user_role":role, "user_id":user.id}
+
+    except Exception as e:
+        error_msg = f"Failed to randomly generate {amount} users. Failed at: {user_cnt}/{amount}. Error: {e}"
+        logger.error(error_msg)
+        return False
+    else:
+        info_msg = f"Successfully randomly generated {amount} users. Check them out: {users}."
+        logger.info(info_msg)
+        return users
+
+def randomly_populate_all(amount:int, any_role:bool):
+    """
+    (* Except for Countries, User_Roles, and Tickets.)
+    "amount" signifies how many users will be created, as long as "any_role" isn't 2.
+    If "any_role" is 0, only customer Users and their related Customers table will get populated.
+    If "any_role" is 1, all roles and their related tables can get populated at RANDOM.
+    If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
+    """
+    users = randomly_populate_users(amount=amount)
+    if not users:
+        error_msg = f"The function randomly_populate_users failed at the user stage. Check the other logs for more info."
+        logger.error(error_msg)
+        return False
+
+    for val in users.values():
+        data = val
+        if data['user_role'] == 1: # populate Administrators
+            pass
+        elif data['user_role'] == 2: # populate Airline_Companies and Flights
+            pass
+        else: # populate Customers
+            pass
+
+
+
+# ==================================================================================================
+# NOT MY CODE!!!! ==================================================================================
+
+# TAKEN FROM: https://github.com/eye9poob/python/blob/master/credit-card-numbers-generator.py
+# by ..:: crazyjunkie ::.. 2014
+
+from random import Random
+import copy
+
+visaPrefixList = [
+        ['4', '5', '3', '9'],
+        ['4', '5', '5', '6'],
+        ['4', '9', '1', '6'],
+        ['4', '5', '3', '2'],
+        ['4', '9', '2', '9'],
+        ['4', '0', '2', '4', '0', '0', '7', '1'],
+        ['4', '4', '8', '6'],
+        ['4', '7', '1', '6'],
+        ['4']]
+
+mastercardPrefixList = [
+        ['5', '1'], ['5', '2'], ['5', '3'], ['5', '4'], ['5', '5']]
+
+amexPrefixList = [['3', '4'], ['3', '7']]
+
+discoverPrefixList = [['6', '0', '1', '1']]
+
+dinersPrefixList = [
+        ['3', '0', '0'],
+        ['3', '0', '1'],
+        ['3', '0', '2'],
+        ['3', '0', '3'],
+        ['3', '6'],
+        ['3', '8']]
+
+enRoutePrefixList = [['2', '0', '1', '4'], ['2', '1', '4', '9']]
+
+jcbPrefixList = [['3', '5']]
+
+voyagerPrefixList = [['8', '6', '9', '9']]
+
+
+def completed_number(prefix, length):
+    """
+    'prefix' is the start of the CC number as a string, any number of digits.
+    'length' is the length of the CC number to generate. Typically 13 or 16
+    """
+
+    ccnumber = prefix
+
+    # generate digits
+
+    while len(ccnumber) < (length - 1):
+        digit = str(generator.choice(range(0, 10)))
+        ccnumber.append(digit)
+
+    # Calculate sum
+
+    sum = 0
+    pos = 0
+
+    reversedCCnumber = []
+    reversedCCnumber.extend(ccnumber)
+    reversedCCnumber.reverse()
+
+    while pos < length - 1:
+
+        odd = int(reversedCCnumber[pos]) * 2
+        if odd > 9:
+            odd -= 9
+
+        sum += odd
+
+        if pos != (length - 2):
+
+            sum += int(reversedCCnumber[pos + 1])
+
+        pos += 2
+
+    # Calculate check digit
+
+    checkdigit = ((sum / 10 + 1) * 10 - sum) % 10
+
+    ccnumber.append(str(checkdigit))
+
+    return ''.join(ccnumber)
+
+
+def credit_card_number(rnd, prefixList, length, howMany):
+
+    result = []
+
+    while len(result) < howMany:
+
+        ccnumber = copy.copy(rnd.choice(prefixList))
+        result.append(completed_number(ccnumber, length))
+
+    return result
+
+
+def output(title, numbers):
+
+    result = []
+    result.append(title)
+    result.append('-' * len(title))
+    result.append('\n'.join(numbers))
+    result.append('')
+
+    return '\n'.join(result)
+
+#
+# Main
+#
+
+generator = Random()
+generator.seed()        # Seed from current time
+
+print("credit card generator by ..:: crazyjunkie ::..\n")
+
+mastercard = credit_card_number(generator, mastercardPrefixList, 16, 10)
+print(output("Mastercard", mastercard))
+
+visa16 = credit_card_number(generator, visaPrefixList, 16, 10)
+print(output("VISA 16 digit", visa16))
+
+visa13 = credit_card_number(generator, visaPrefixList, 13, 5)
+print(output("VISA 13 digit", visa13))
+
+amex = credit_card_number(generator, amexPrefixList, 15, 5)
+print(output("American Express", amex))
+
+# Minor cards
+
+discover = credit_card_number(generator, discoverPrefixList, 16, 3)
+print(output("Discover", discover))
+
+diners = credit_card_number(generator, dinersPrefixList, 14, 3)
+print(output("Diners Club / Carte Blanche", diners))
+
+enRoute = credit_card_number(generator, enRoutePrefixList, 15, 3)
+print(output("enRoute", enRoute))
+
+jcb = credit_card_number(generator, jcbPrefixList, 16, 3)
+print(output("JCB", jcb))
+
+voyager = credit_card_number(generator, voyagerPrefixList, 15, 3)
+print(output("Voyager", voyager))
