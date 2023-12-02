@@ -1,29 +1,32 @@
 from django.test import TestCase
 import pytest
-from ...airline_reservation_system.facade import *
+from airline_reservation_system.facade import *
+from airline_reservation_system.utiles import populate_countries
 
-# pytest .\tests\airline_reservation_system\test_facade.py::Test_Get_Instances_By_Name
-@pytest.mark.skip
+# pytest .\airline_reservation_system\test_facade.py::Test_Get_Instances_By_Name
+# @pytest.mark.skip
 class Test_Get_Instances_By_Name(TestCase):
 
     @pytest.mark.django_db()
     def test_get_instances_by_name(self):
 
         # Correct use: ===============================================
-        
-        role_FD = {'role_name': 'Administrator'}
-        role_name = 'Administrator'
-        assert(validate_user_role(role_name=role_name))
-        DAL.add_instance(some_model=User_Roles, field_data=role_FD)
-        
+        if not(populate_countries()):
+            print("'populate_countries' failed. Can't run this test.")
+            assert(False)
 
-        # Wrong uses: ===============================================
-        assert(not(validate_user_role(role_name=role_name))) # when it already exists
+        str = 'Canada'
+        assert(Facade_Base.get_instances_by_name(some_model=Countries, name=str))
+        str = 'canada'
+        assert(Facade_Base.get_instances_by_name(some_model=Countries, name=str))
+        str = 'a'
+        assert(Facade_Base.get_instances_by_name(some_model=Countries, name=str))
+        str = 'tc'
+        assert(Facade_Base.get_instances_by_name(some_model=Countries, name=str))
 
-        role_name = {'role_name': 'Cat'}
-        assert(not(validate_user_role(role_name=role_name)))
+        # # Wrong uses: ===============================================
+        str = 'zzzzzzzzzzzzzzzzzzz'
+        assert(not(Facade_Base.get_instances_by_name(some_model=Countries, name=str)))
 
-        role_name = {'role_name': 5}
-        assert(not(validate_user_role(role_name=role_name)))
-
-        assert(not(validate_user_role(role_name=role_FD)))
+        str = 'uy4'
+        assert(not(Facade_Base.get_instances_by_name(some_model=Countries, name=str)))

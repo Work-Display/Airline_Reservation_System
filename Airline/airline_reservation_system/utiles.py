@@ -2,6 +2,7 @@ from django.core.validators import validate_email
 import re
 from airline_reservation_system.models import *
 from airline_reservation_system.dal import *
+from airline_reservation_system.validators import *
 from airline_reservation_system.validators import validate_id, validate_instance_type, get_role_by_user
 from PIL import Image
 from phonenumber_field.validators import validate_international_phonenumber
@@ -1123,6 +1124,17 @@ def get_email(username:str):
 	
 	return username+str(num)+dmn+ext
 
+def randomly_generate_admin(user_id:int):
+    """
+    Generates random data for an Administrator instance and returns it in a dictionary.
+    """
+    first_name = randominfo.get_first_name()
+    last_name = randominfo.get_last_name()
+    admin_FD = {'first_name': first_name, 'last_name': last_name, 'user_id':user_id}
+    return admin_FD
+    
+
+
 def randomly_populate_users(amount:int, any_role:int):
     """
     Adds x "amount" of randomly generated users to the database. 
@@ -1134,6 +1146,7 @@ def randomly_populate_users(amount:int, any_role:int):
     """
     try:
         amount = int(amount)
+        any_role = int(any_role)
         if amount==0:
             amount = 1
         if any_role==2:
@@ -1160,7 +1173,6 @@ def randomly_populate_users(amount:int, any_role:int):
             username = generate_username()
             username = str(username[0])
             email = get_email(username=username)
-            print(f"Mooooooooooooooooooooooo O: + {email = }")
             password = randominfo.random_password(length=6, special_chars=False)
             img_size = (128,128)
             profile_pic = get_random_image(img_size) 
@@ -1190,7 +1202,7 @@ def randomly_populate_all(amount:int, any_role:bool):
     If "any_role" is 1, all roles and their related tables can get populated at RANDOM.
     If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
     """
-    users = randomly_populate_users(amount=amount)
+    users = randomly_populate_users(amount=amount, any_role=any_role)
     if not users:
         error_msg = f"The function randomly_populate_users failed at the user stage. Check the other logs for more info."
         logger.error(error_msg)
@@ -1199,7 +1211,10 @@ def randomly_populate_all(amount:int, any_role:bool):
     for val in users.values():
         data = val
         if data['user_role'] == 1: # populate Administrators
-            pass
+            admin_FD = randomly_generate_admin(user_id=data['user_id'])
+            while(validate_administrator(admin_field_data=admin_FD)==False): # Very unlikely to go into the while loop. - I skimmed over the data.csv file which 'randominfo' uses, and it seems that all the names there are valid by ARS's standards, so this shouldn't be a problem performance-wise.
+                admin_FD = randomly_generate_admin(user_id=data['user_id'])
+            DAL.add_instance(some_model=Administrators, field_data=admin_FD)
         elif data['user_role'] == 2: # populate Airline_Companies and Flights
             pass
         else: # populate Customers
@@ -1321,36 +1336,36 @@ def output(title, numbers):
 # Main
 #
 
-generator = Random()
-generator.seed()        # Seed from current time
+# generator = Random()
+# generator.seed()        # Seed from current time
 
-print("credit card generator by ..:: crazyjunkie ::..\n")
+# print("credit card generator by ..:: crazyjunkie ::..\n")
 
-mastercard = credit_card_number(generator, mastercardPrefixList, 16, 10)
-print(output("Mastercard", mastercard))
+# mastercard = credit_card_number(generator, mastercardPrefixList, 16, 10)
+# print(output("Mastercard", mastercard))
 
-visa16 = credit_card_number(generator, visaPrefixList, 16, 10)
-print(output("VISA 16 digit", visa16))
+# visa16 = credit_card_number(generator, visaPrefixList, 16, 10)
+# print(output("VISA 16 digit", visa16))
 
-visa13 = credit_card_number(generator, visaPrefixList, 13, 5)
-print(output("VISA 13 digit", visa13))
+# visa13 = credit_card_number(generator, visaPrefixList, 13, 5)
+# print(output("VISA 13 digit", visa13))
 
-amex = credit_card_number(generator, amexPrefixList, 15, 5)
-print(output("American Express", amex))
+# amex = credit_card_number(generator, amexPrefixList, 15, 5)
+# print(output("American Express", amex))
 
-# Minor cards
+# # Minor cards
 
-discover = credit_card_number(generator, discoverPrefixList, 16, 3)
-print(output("Discover", discover))
+# discover = credit_card_number(generator, discoverPrefixList, 16, 3)
+# print(output("Discover", discover))
 
-diners = credit_card_number(generator, dinersPrefixList, 14, 3)
-print(output("Diners Club / Carte Blanche", diners))
+# diners = credit_card_number(generator, dinersPrefixList, 14, 3)
+# print(output("Diners Club / Carte Blanche", diners))
 
-enRoute = credit_card_number(generator, enRoutePrefixList, 15, 3)
-print(output("enRoute", enRoute))
+# enRoute = credit_card_number(generator, enRoutePrefixList, 15, 3)
+# print(output("enRoute", enRoute))
 
-jcb = credit_card_number(generator, jcbPrefixList, 16, 3)
-print(output("JCB", jcb))
+# jcb = credit_card_number(generator, jcbPrefixList, 16, 3)
+# print(output("JCB", jcb))
 
-voyager = credit_card_number(generator, voyagerPrefixList, 15, 3)
-print(output("Voyager", voyager))
+# voyager = credit_card_number(generator, voyagerPrefixList, 15, 3)
+# print(output("Voyager", voyager))

@@ -40,9 +40,6 @@ class DAL:
         if ((type(id) is int) and (id>0)):
             if (some_model in my_models):
                 try:
-                    print(f"{some_model = }")
-                    all= some_model.objects.all()
-                    print(f"{all = }")
                     instance = some_model.objects.get(id=id)
                     logger.info(f"Successfully got the {some_model} instance, pk={id}.")
                     return instance

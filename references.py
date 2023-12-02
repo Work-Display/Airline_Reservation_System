@@ -24,8 +24,8 @@
     # pytest ./tests/airline_reservation_system/test_utiles.py::Test_For_Missing_Migrations
 
     # React:
-        # before deployment: npm start build 
-        # for deployment use: npm run build 
+        # before deployment: npm run build 
+        # for deployment use: npm start build 
 
 
 # ===========================================================================================================================
