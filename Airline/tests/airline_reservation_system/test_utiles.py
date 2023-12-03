@@ -67,6 +67,19 @@ class Test_Randomly_Populate_Users(TestCase):
         assert(randomly_populate_users(amount=3, any_role=2))
 
 
+# pytest .\airline_reservation_system\test_utiles.py::Test_Randomly_Populate_All
+# @pytest.mark.skip
+class Test_Randomly_Populate_All(TestCase):
+
+    @pytest.mark.django_db()
+    def test_randomly_populate_all(self):
+        if not(populate_user_roles()):
+            print("'populate_user_roles' failed. Can't run this test.")
+            assert(False)
+
+        assert(randomly_populate_all(amount=0, any_role=2))
+
+
 
 from io import StringIO
 from django.core import management

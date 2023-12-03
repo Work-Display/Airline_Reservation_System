@@ -10,7 +10,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import request
 import base64
 import numpy as np
+import faker
 import random
+generator = random.Random()
+generator.seed()
 import names
 import phone_gen
 from randimage import get_random_image, show_array
@@ -1126,15 +1129,240 @@ def get_email(username:str):
 
 def randomly_generate_admin(user_id:int):
     """
-    Generates random data for an Administrator instance and returns it in a dictionary.
+    Generates random data for an 'Administrator' instance and returns it in a dictionary.
     """
     first_name = randominfo.get_first_name()
     last_name = randominfo.get_last_name()
     admin_FD = {'first_name': first_name, 'last_name': last_name, 'user_id':user_id}
     return admin_FD
     
+def randomly_generate_airline(user_id:int):
+    """
+    Generates random data for an 'Airline_Companies' instance and returns it in a dictionary.
+    """
+    airline_names = [
+        "AeroJet",
+        "SkyLink",
+        "StarWings",
+        "FlyNova",
+        "AirVoyage",
+        "SwiftAir",
+        "JetGlobe",
+        "AquaAir",
+        "AirHorizon",
+        "BlueSky",
+        "AirWave",
+        "CloudLine",
+        "SilverJet",
+        "WingStar",
+        "AlphaAir",
+        "SkyQuest",
+        "AviaExpress",
+        "FlightMasters",
+        "AirVista",
+        "AeroLinx",
+        "SkyTrails",
+        "FlyRise",
+        "JetStream",
+        "CosmoWings",
+        "VoyageAir",
+        "AirQuest",
+        "StarJet",
+        "AirSail",
+        "AeroSwift",
+        "Skyway",
+        "AirVortex",
+        "NovaWings",
+        "FlyHaven",
+        "JetLink",
+        "BlueLine",
+        "AeroWave",
+        "CloudJet",
+        "SilverSky",
+        "WingSpan",
+        "AlphaJet",
+        "SkyGlide",
+        "AviaStar",
+        "FlightPoint",
+        "AirVantage",
+        "AeroLink",
+        "SkyScape",
+        "FlyQuest",
+        "JetRise",
+        "CosmoLinx",
+        "VoyageJet",
+        "AirScape",
+        "StarGlide",
+        "AirSurge",
+        "AeroNova",
+        "SkySail",
+        "FlySwift",
+        "JetHaven",
+        "BlueLink",
+        "AeroStream",
+        "CloudSpan",
+        "SilverQuest",
+        "WingHaven",
+        "AlphaLine",
+        "SkyPoint",
+        "AviaVista",
+        "FlightWave",
+        "AirMasters",
+        "AeroVoyage",
+        "SkyTrails",
+        "FlyRise",
+        "JetStream",
+        "CosmoWings",
+        "VoyageAir",
+        "AirQuest",
+        "StarJet",
+        "AirSail",
+        "AeroSwift",
+        "Skyway",
+        "AirVortex",
+        "NovaWings",
+        "FlyHaven",
+        "JetLink",
+        "BlueLine",
+        "AeroWave",
+        "CloudJet",
+        "SilverSky",
+        "WingSpan",
+        "AlphaJet",
+        "SkyGlide",
+        "AviaStar",
+        "FlightPoint",
+        "AirVantage",
+        "AeroLink",
+        "SkyScape",
+        "FlyQuest",
+        "JetRise",
+        "CosmoLinx",
+        "VoyageJet",
+        "AirScape",
+        "StarGlide",
+        "AirSurge",
+        "AeroNova",
+        "SkySail",
+        "FlySwift",
+        "JetHaven",
+        "BlueLink",
+        "AeroStream",
+        "CloudSpan",
+        "SilverQuest",
+        "WingHaven",
+        "AlphaLine",
+        "SkyPoint",
+        "AviaVista",
+        "FlightWave",
+        "AirMasters"
+    ]
 
+    spaceless_name = random.choice(airline_names)
+    name = re.sub(r'(.)([A-Z][a-z]+)', r'\1 \2', spaceless_name).strip() # Adds a space before the capital letters, excluding the first one.
+    country_id = random.randint(1, 249)
+    airline_FD = {'name':name, 'country_id_id':country_id, 'user_id_id':user_id}
+    return airline_FD
 
+def random_datetime(start:datetime, end:datetime):
+    """
+    Generates a random datetime within a given range.
+    """
+    return start + timedelta(seconds=random.randint(0, int((end - start).total_seconds())))
+
+def generate_landing_datetime(departure_time:datetime):
+    """
+    Generates a landing datetime from a given departure datetime, under the following conditions:
+    1) The landing should be at least more than 35 minutes ahead of the first datetime, but no more than 15 hours ahead of it. 
+    2) The seconds must always be at zero. 
+    3) The minutes should always be evenly divisible by 5.
+    """
+
+    # Define the minimum and maximum time differences for landing datetime
+    min_diff = timedelta(minutes=35)
+    max_diff = timedelta(hours=15)
+
+    # Generate a random time difference within the defined range
+    time_diff = random.randint(min_diff.seconds, max_diff.seconds)
+    landing_time = departure_time + timedelta(seconds=time_diff)
+
+    # Round the minutes to the nearest multiple of 5
+    landing_time = landing_time.replace(minute=(landing_time.minute // 5) * 5)
+
+    # Set the seconds to zero
+    landing_time = landing_time.replace(second=0)
+
+    return landing_time
+
+def generate_flight_schedule():
+    """
+    Returns a dictionary which contains a hypothetical flight's VALID departure and landing datetimes. 
+    They will be randomly chosen and generated from a time range between now, and a year from now.
+    """
+
+    # Get the current datetime
+    now = datetime.now()
+
+    # Define the time range for the first datetime (from now to a year from now)
+    start_time = now
+    end_time = now + timedelta(days=365)
+
+    # Generate the first datetime within the time range
+    departure_time = random_datetime(start_time, end_time)
+
+    # Generate the second datetime based on the conditions
+    landing_time = generate_landing_datetime(departure_time)
+
+    # Format the datetimes as strings
+    departure_str = departure_time.strftime('%Y-%m-%d %H:%M:%S')
+    landing_str = landing_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Create and return the flight schedule dictionary
+    flight_schedule = {'departure': departure_str, 'landing': landing_str}
+    return flight_schedule
+
+def generate_diff_ints(start:int, end:int):
+    """
+    Generates two different integers from the same chosen range.
+    """
+
+    # Generate the first random integer
+    first_integer = random.randint(start, end)
+
+    # Generate the second random integer until it is different from the first
+    second_integer = random.randint(start, end)
+    while second_integer == first_integer:
+        second_integer = random.randint(start, end)
+
+    return first_integer, second_integer
+
+def randomly_generate_flight(airline_id:int):
+    """
+    Generates random data for a 'Flights' instance and returns it in a dictionary.
+    """
+    flight_schedule = generate_flight_schedule()
+    departure = flight_schedule["departure"]
+    landing = flight_schedule["landing"]
+    origin, destination = generate_diff_ints(1,249)
+    flight_FD = {'airline_company_id_id':airline_id, 'origin_country_id_id':origin, 'destination_country_id_id':destination, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':random.randint(0, 860)}
+    return flight_FD
+
+def randomly_generate_customer(user_id:int):
+    """
+    Generates random data for a 'Customers' instance and returns it in a dictionary.
+    """
+    firstN = randominfo.get_first_name(gender=None)
+    lastN = randominfo.get_last_name()
+    dict_address = random_address.real_random_address()
+    address = dict_address['state'] + ',' + dict_address['city'] + ',' + dict_address['address1'] + '.'
+    phone = randominfo.get_phone_number(country_code=True)
+    prefix_list = [visaPrefixList, mastercardPrefixList] # (I use only those two here because I don't recall testing my card regex validation as thoroughly with other prefixes :P.) 
+    card_prefix = random.choice(prefix_list)
+    card = credit_card_number(generator, card_prefix, 16, 10)
+    customer_FD = {'first_name': firstN, 'last_name': lastN, 'address':address, 
+                    'phone_no':phone, 'credit_card_no':card, 'user_id':user_id}
+    return customer_FD
+    
 def randomly_populate_users(amount:int, any_role:int):
     """
     Adds x "amount" of randomly generated users to the database. 
@@ -1197,10 +1425,15 @@ def randomly_populate_users(amount:int, any_role:int):
 def randomly_populate_all(amount:int, any_role:bool):
     """
     (* Except for Countries, User_Roles, and Tickets.)
-    "amount" signifies how many users will be created, as long as "any_role" isn't 2.
-    If "any_role" is 0, only customer Users and their related Customers table will get populated.
-    If "any_role" is 1, all roles and their related tables can get populated at RANDOM.
-    If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
+        Returns True upon success, False otherwise.
+        "amount" signifies how many users will be created, as long as "any_role" isn't 2.
+        If "any_role" is 0, only customer Users and their related Customers table will get populated.
+        If "any_role" is 1, all roles and their related tables can get populated at RANDOM.
+        If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
+    (* In case all those while loops throw off your internal alarms for potential infinite loops, DW. They're there only as a means for a very unlikely insurance. 
+    I skimmed over the data.csv file which 'randominfo' uses, and the other sources that this function bases its data generation upon, and it seems that all the data there is valid 
+    by ARS's standards. So this shouldn't be too much of a problem performance-wise. Also, in the front-end I'll limit the use of this function to only 1 use per admin, 
+    and only to mode (any_role = ) 2.)
     """
     users = randomly_populate_users(amount=amount, any_role=any_role)
     if not users:
@@ -1209,23 +1442,74 @@ def randomly_populate_all(amount:int, any_role:bool):
         return False
 
     for val in users.values():
-        data = val
-        if data['user_role'] == 1: # populate Administrators
-            admin_FD = randomly_generate_admin(user_id=data['user_id'])
-            while(validate_administrator(admin_field_data=admin_FD)==False): # Very unlikely to go into the while loop. - I skimmed over the data.csv file which 'randominfo' uses, and it seems that all the names there are valid by ARS's standards, so this shouldn't be a problem performance-wise.
-                admin_FD = randomly_generate_admin(user_id=data['user_id'])
-            DAL.add_instance(some_model=Administrators, field_data=admin_FD)
-        elif data['user_role'] == 2: # populate Airline_Companies and Flights
-            pass
-        else: # populate Customers
-            pass
+        user_id = val['user_id']
+        user_role = val['user_role']
+        error_msg = ""
+        try:
+            if user_role == 1: # populate Administrators
+                admin_FD = randomly_generate_admin(user_id=user_id)
+                while(validate_b4_add(some_model=Administrators, field_data=admin_FD)==False): 
+                    admin_FD = randomly_generate_admin(user_id=user_id)
+                DAL.add_instance(some_model=Administrators, field_data=admin_FD)
+
+            elif user_role == 2: # populate Airline_Companies and Flights
+                retries = 0
+                airline_FD = randomly_generate_airline(user_id=user_id)
+                while(validate_b4_add(some_model=Airline_Companies, field_data=airline_FD)==False):
+                    retries += 1
+                    # If there would be many airline generations, it will run out of airline names eventually since I had made a list with only a 100 names to choose from, so this is a safety measure for this case.
+                    if (retries == 10) : # A stopper. Although there are a 100 names to choose from, I think that a delay of 10 tries signifies that there is already more than enough random data IMO. After all, it's just a tiny project for potential employees with no real world use.
+                        error_msg = f"Hey! There's already enough data to fill in the tables IMO. I made sure that trying to populate more data at this point won't be possible, so activating this won't do much from now on."
+                        logger.error(error_msg) 
+                        raise Exception
+                    airline_FD = randomly_generate_airline(user_id=user_id)
+                airline = DAL.add_instance(some_model=Airline_Companies, field_data=airline_FD)
+                if (type(airline)==str): # Won't happen, well unless the DB had reached full capacity.
+                    error_msg = f"Failed to to add an 'Airline_Companies' instance to the DB within 'randomly_populate_users'. {airline_FD = }"
+                    logger.error(error_msg) 
+                    raise Exception
+                airline = Airline_Companies.objects.get(user_id_id=user_id)
+
+                # Adds 5 flights to each airline
+                for i in range(5):
+                    flight_FD = randomly_generate_flight(airline_id=airline.id)
+                    while(validate_b4_add(some_model=Flights, field_data=flight_FD)==False):
+                        flight_FD = randomly_generate_flight(airline_id=airline.id)
+                    DAL.add_instance(some_model=Flights, field_data=flight_FD)
+
+            else: # populate Customers
+                customer_FD = randomly_generate_customer(user_id=user_id)
+                while(validate_b4_add(some_model=Customers, field_data=customer_FD)==False):
+                    customer_FD = randomly_generate_customer(user_id=user_id)
+                DAL.add_instance(some_model=Customers, field_data=customer_FD)
+
+        except Exception as e:
+            oh_no = f"Failed to randomly populate all. | {amount = }, {any_role = }, {error_msg = }, {e = } |"
+            logger.error(oh_no) 
+            return False
+    msg = f"Successfully randomly populated all. Go check out the tables! | {amount = }, {any_role = } |"
+    logger.info(msg)
+    return True
 
 
 
-# ==================================================================================================
-# NOT MY CODE!!!! ==================================================================================
 
+
+# ========================================================================================================
+# ========================================================================================================
+# ========================================================================================================
+# NOT MY CODE FROM HERE ON!!!! You must abide the original creator's rules for their code. ===============
+# ========================================================================================================
+# P.S - If you want me to stop using your code, please just say so and I'll remove it as soon as I can. 
+# I used it while you made it okay for general public use, and obviously I can't always magically stay 
+# updated on any changes you make in your use permissions. So sorry in advance for any unintentional trouble.
+# ========================================================================================================
+# ========================================================================================================
+# ========================================================================================================
+
+# v========================================================================================================v
 # TAKEN FROM: https://github.com/eye9poob/python/blob/master/credit-card-numbers-generator.py
+
 # by ..:: crazyjunkie ::.. 2014
 
 from random import Random
@@ -1369,3 +1653,5 @@ def output(title, numbers):
 
 # voyager = credit_card_number(generator, voyagerPrefixList, 15, 3)
 # print(output("Voyager", voyager))
+
+# ^========================================================================================================^
