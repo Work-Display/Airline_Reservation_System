@@ -73,7 +73,7 @@ class Test_Randomly_Populate_All(TestCase):
 
     @pytest.mark.django_db()
     def test_randomly_populate_all(self):
-        if not(populate_user_roles()):
+        if not(populate_user_roles() and populate_countries()):
             print("'populate_user_roles' failed. Can't run this test.")
             assert(False)
 

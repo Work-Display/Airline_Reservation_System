@@ -31,35 +31,35 @@ def validate_b4_add(some_model:type[models.Model], field_data:dict):
         return False
     if some_model==User_Roles:
         if validate_user_role(role_name=field_data):
-            logger.info(f"Successfully validated a user role (role_name = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a user role: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Users:
         if validate_user(user_field_data=field_data):
-            logger.info(f"Successfully validated a user (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a user: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Customers:
         if validate_customer(customer_field_data=field_data):
-            logger.info(f"Successfully validated a customer (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a customer: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Administrators:
         if validate_administrator(admin_field_data=field_data):
-            logger.info(f"Successfully validated an administrator (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated an administrator: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Airline_Companies:
         if validate_airline_company(airline_field_data=field_data):
-            logger.info(f"Successfully validated an airline company (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated an airline company: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Countries:
         if validate_country(country_field_data=field_data):
-            logger.info(f"Successfully validated a country (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a country: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Flights:
         if validate_flight(flight_field_data=field_data):
-            logger.info(f"Successfully validated a flight (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a flight: {field_data}. You can now use DAL to add it as an instance.")
             return True
     if some_model==Tickets:
         if validate_ticket(ticket_field_data=field_data):
-            logger.info(f"Successfully validated a ticket (FD[0] = {field_data[0]}). You can now use DAL to add it as an instance.")
+            logger.info(f"Successfully validated a ticket: {field_data}. You can now use DAL to add it as an instance.")
             return True
     return False
 
@@ -333,7 +333,7 @@ def validate_customer(customer_field_data:dict):
                 logger.error(error_msg)
                 return False
     
-    info_msg = f"Successfully validate a customer. 'phone_no' = '{phone_no}'.)"
+    info_msg = f"Successfully validated a customer. 'phone_no' = '{phone_no}'.)"
     logger.info(info_msg)
     return True
 
@@ -450,7 +450,7 @@ def validate_airline_company(airline_field_data:dict):
         return False
     data = airline_field_data
     if sorted(fields)!=sorted(keys):
-        error_msg = f"Please make sure that airline_field_data's keys match the field names of {Administrators}. Here are those fields: {fields}, and here are your keys: {keys}."
+        error_msg = f"Please make sure that airline_field_data's keys match the field names of {Airline_Companies}. Here are those fields: {fields}, and here are your keys: {keys}."
         logger.error(error_msg)
         return False
     

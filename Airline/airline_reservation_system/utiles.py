@@ -12,8 +12,6 @@ import base64
 import numpy as np
 import faker
 import random
-generator = random.Random()
-generator.seed()
 import names
 import phone_gen
 from randimage import get_random_image, show_array
@@ -1261,14 +1259,18 @@ def randomly_generate_airline(user_id:int):
     spaceless_name = random.choice(airline_names)
     name = re.sub(r'(.)([A-Z][a-z]+)', r'\1 \2', spaceless_name).strip() # Adds a space before the capital letters, excluding the first one.
     country_id = random.randint(1, 249)
-    airline_FD = {'name':name, 'country_id_id':country_id, 'user_id_id':user_id}
+    airline_FD = {'name':name, 'country_id':country_id, 'user_id':user_id}
     return airline_FD
 
-def random_datetime(start:datetime, end:datetime):
+def random_datetime(start: datetime, end: datetime):
     """
     Generates a random datetime within a given range.
     """
-    return start + timedelta(seconds=random.randint(0, int((end - start).total_seconds())))
+    total_seconds = (end - start).total_seconds()
+    minutes = int(total_seconds / 60)
+    minutes_divisible_by_5 = random.randint(0, minutes // 5) * 5
+
+    return start + timedelta(minutes=minutes_divisible_by_5)
 
 def generate_landing_datetime(departure_time:datetime):
     """
@@ -1313,12 +1315,11 @@ def generate_flight_schedule():
     # Generate the second datetime based on the conditions
     landing_time = generate_landing_datetime(departure_time)
 
-    # Format the datetimes as strings
-    departure_str = departure_time.strftime('%Y-%m-%d %H:%M:%S')
-    landing_str = landing_time.strftime('%Y-%m-%d %H:%M:%S')
+    departure_time = departure_time.replace(second=0, microsecond=0)
+    landing_time = landing_time.replace(second=0, microsecond=0)
 
     # Create and return the flight schedule dictionary
-    flight_schedule = {'departure': departure_str, 'landing': landing_str}
+    flight_schedule = {'departure': departure_time, 'landing': landing_time}
     return flight_schedule
 
 def generate_diff_ints(start:int, end:int):
@@ -1344,8 +1345,62 @@ def randomly_generate_flight(airline_id:int):
     departure = flight_schedule["departure"]
     landing = flight_schedule["landing"]
     origin, destination = generate_diff_ints(1,249)
-    flight_FD = {'airline_company_id_id':airline_id, 'origin_country_id_id':origin, 'destination_country_id_id':destination, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':random.randint(0, 860)}
+    flight_FD = {'airline_company_id':airline_id, 'origin_country_id':origin, 'destination_country_id':destination, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':random.randint(0, 860)}
     return flight_FD
+
+def generate_fake_credit_card_number():
+    while True:
+        # Generate a random credit card number
+        credit_card_number = generate_random_credit_card_number()
+
+        # Validate the credit card number
+        if validate_credit_card_number(credit_card_number):
+            return credit_card_number
+
+def generate_random_credit_card_number():
+    # Generate a random 16-digit credit card number
+    credit_card_number = '4' + ''.join(random.choice('0123456789') for _ in range(15))
+    return credit_card_number
+
+def validate_credit_card_number(credit_card_number):
+    # Remove non-digit characters from the credit card number
+    raw_val = re.sub(r'[^0-9]+', "", credit_card_number)
+
+    # Check if the credit card number matches the given regular expression pattern
+    pattern = "^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$"
+    if not re.match(pattern, raw_val):
+        return False
+
+    return True
+
+def generate_fake_phone_number():
+    while True:
+        # Generate a random phone number
+        phone_number = generate_random_phone_number()
+
+        # Validate the phone number
+        if validate_phone_number(phone_number):
+            return phone_number
+
+def generate_random_phone_number():
+    # Generate a random 10-digit phone number
+    phone_number = ''.join(random.choice('0123456789') for _ in range(10))
+    return phone_number
+
+def validate_phone_number(phone_number):
+    # Remove non-digit characters from the phone number
+    raw_val = re.sub(r'[^0-9]', "", phone_number)
+
+    # Add '+' at the beginning of the phone number
+    phone_no = '+' + raw_val
+
+    try:
+        # Validate the international phone number
+        validate_international_phonenumber(phone_no)
+    except Exception as e:
+        return False
+
+    return True
 
 def randomly_generate_customer(user_id:int):
     """
@@ -1354,11 +1409,9 @@ def randomly_generate_customer(user_id:int):
     firstN = randominfo.get_first_name(gender=None)
     lastN = randominfo.get_last_name()
     dict_address = random_address.real_random_address()
-    address = dict_address['state'] + ',' + dict_address['city'] + ',' + dict_address['address1'] + '.'
-    phone = randominfo.get_phone_number(country_code=True)
-    prefix_list = [visaPrefixList, mastercardPrefixList] # (I use only those two here because I don't recall testing my card regex validation as thoroughly with other prefixes :P.) 
-    card_prefix = random.choice(prefix_list)
-    card = credit_card_number(generator, card_prefix, 16, 10)
+    address = dict_address['state'] + ', ' + dict_address['city'] + ', ' + dict_address['address1'] + '.'
+    phone = generate_fake_phone_number()
+    card = generate_fake_credit_card_number()
     customer_FD = {'first_name': firstN, 'last_name': lastN, 'address':address, 
                     'phone_no':phone, 'credit_card_no':card, 'user_id':user_id}
     return customer_FD
@@ -1402,7 +1455,7 @@ def randomly_populate_users(amount:int, any_role:int):
             username = str(username[0])
             email = get_email(username=username)
             password = randominfo.random_password(length=6, special_chars=False)
-            img_size = (128,128)
+            img_size = (450,450)
             profile_pic = get_random_image(img_size) 
             profile_pic = Image.fromarray((profile_pic * 255).astype('uint8')).save('././images2test/random_profiles/pic.jpg')
             profile_pic = SimpleUploadedFile(name='test_image.jpg', content=open("././images2test/random_profiles/pic.jpg", 'rb').read(), content_type='image/jpg')
@@ -1450,6 +1503,7 @@ def randomly_populate_all(amount:int, any_role:bool):
                 admin_FD = randomly_generate_admin(user_id=user_id)
                 while(validate_b4_add(some_model=Administrators, field_data=admin_FD)==False): 
                     admin_FD = randomly_generate_admin(user_id=user_id)
+                admin_FD['user_id_id'] = admin_FD.pop('user_id')
                 DAL.add_instance(some_model=Administrators, field_data=admin_FD)
 
             elif user_role == 2: # populate Airline_Companies and Flights
@@ -1461,8 +1515,10 @@ def randomly_populate_all(amount:int, any_role:bool):
                     if (retries == 10) : # A stopper. Although there are a 100 names to choose from, I think that a delay of 10 tries signifies that there is already more than enough random data IMO. After all, it's just a tiny project for potential employees with no real world use.
                         error_msg = f"Hey! There's already enough data to fill in the tables IMO. I made sure that trying to populate more data at this point won't be possible, so activating this won't do much from now on."
                         logger.error(error_msg) 
-                        raise Exception
+                        raise Exception("In the airline validation part, it failed 10 times in a row.")
                     airline_FD = randomly_generate_airline(user_id=user_id)
+                airline_FD['country_id_id'] = airline_FD.pop('country_id')
+                airline_FD['user_id_id'] = airline_FD.pop('user_id')
                 airline = DAL.add_instance(some_model=Airline_Companies, field_data=airline_FD)
                 if (type(airline)==str): # Won't happen, well unless the DB had reached full capacity.
                     error_msg = f"Failed to to add an 'Airline_Companies' instance to the DB within 'randomly_populate_users'. {airline_FD = }"
@@ -1475,12 +1531,16 @@ def randomly_populate_all(amount:int, any_role:bool):
                     flight_FD = randomly_generate_flight(airline_id=airline.id)
                     while(validate_b4_add(some_model=Flights, field_data=flight_FD)==False):
                         flight_FD = randomly_generate_flight(airline_id=airline.id)
+                    flight_FD['airline_company_id_id'] = flight_FD.pop('airline_company_id')
+                    flight_FD['origin_country_id_id'] = flight_FD.pop('origin_country_id')
+                    flight_FD['destination_country_id_id'] = flight_FD.pop('destination_country_id')
                     DAL.add_instance(some_model=Flights, field_data=flight_FD)
 
             else: # populate Customers
                 customer_FD = randomly_generate_customer(user_id=user_id)
                 while(validate_b4_add(some_model=Customers, field_data=customer_FD)==False):
                     customer_FD = randomly_generate_customer(user_id=user_id)
+                customer_FD['user_id_id'] = customer_FD.pop('user_id')
                 DAL.add_instance(some_model=Customers, field_data=customer_FD)
 
         except Exception as e:
@@ -1491,167 +1551,3 @@ def randomly_populate_all(amount:int, any_role:bool):
     logger.info(msg)
     return True
 
-
-
-
-
-# ========================================================================================================
-# ========================================================================================================
-# ========================================================================================================
-# NOT MY CODE FROM HERE ON!!!! You must abide the original creator's rules for their code. ===============
-# ========================================================================================================
-# P.S - If you want me to stop using your code, please just say so and I'll remove it as soon as I can. 
-# I used it while you made it okay for general public use, and obviously I can't always magically stay 
-# updated on any changes you make in your use permissions. So sorry in advance for any unintentional trouble.
-# ========================================================================================================
-# ========================================================================================================
-# ========================================================================================================
-
-# v========================================================================================================v
-# TAKEN FROM: https://github.com/eye9poob/python/blob/master/credit-card-numbers-generator.py
-
-# by ..:: crazyjunkie ::.. 2014
-
-from random import Random
-import copy
-
-visaPrefixList = [
-        ['4', '5', '3', '9'],
-        ['4', '5', '5', '6'],
-        ['4', '9', '1', '6'],
-        ['4', '5', '3', '2'],
-        ['4', '9', '2', '9'],
-        ['4', '0', '2', '4', '0', '0', '7', '1'],
-        ['4', '4', '8', '6'],
-        ['4', '7', '1', '6'],
-        ['4']]
-
-mastercardPrefixList = [
-        ['5', '1'], ['5', '2'], ['5', '3'], ['5', '4'], ['5', '5']]
-
-amexPrefixList = [['3', '4'], ['3', '7']]
-
-discoverPrefixList = [['6', '0', '1', '1']]
-
-dinersPrefixList = [
-        ['3', '0', '0'],
-        ['3', '0', '1'],
-        ['3', '0', '2'],
-        ['3', '0', '3'],
-        ['3', '6'],
-        ['3', '8']]
-
-enRoutePrefixList = [['2', '0', '1', '4'], ['2', '1', '4', '9']]
-
-jcbPrefixList = [['3', '5']]
-
-voyagerPrefixList = [['8', '6', '9', '9']]
-
-
-def completed_number(prefix, length):
-    """
-    'prefix' is the start of the CC number as a string, any number of digits.
-    'length' is the length of the CC number to generate. Typically 13 or 16
-    """
-
-    ccnumber = prefix
-
-    # generate digits
-
-    while len(ccnumber) < (length - 1):
-        digit = str(generator.choice(range(0, 10)))
-        ccnumber.append(digit)
-
-    # Calculate sum
-
-    sum = 0
-    pos = 0
-
-    reversedCCnumber = []
-    reversedCCnumber.extend(ccnumber)
-    reversedCCnumber.reverse()
-
-    while pos < length - 1:
-
-        odd = int(reversedCCnumber[pos]) * 2
-        if odd > 9:
-            odd -= 9
-
-        sum += odd
-
-        if pos != (length - 2):
-
-            sum += int(reversedCCnumber[pos + 1])
-
-        pos += 2
-
-    # Calculate check digit
-
-    checkdigit = ((sum / 10 + 1) * 10 - sum) % 10
-
-    ccnumber.append(str(checkdigit))
-
-    return ''.join(ccnumber)
-
-
-def credit_card_number(rnd, prefixList, length, howMany):
-
-    result = []
-
-    while len(result) < howMany:
-
-        ccnumber = copy.copy(rnd.choice(prefixList))
-        result.append(completed_number(ccnumber, length))
-
-    return result
-
-
-def output(title, numbers):
-
-    result = []
-    result.append(title)
-    result.append('-' * len(title))
-    result.append('\n'.join(numbers))
-    result.append('')
-
-    return '\n'.join(result)
-
-#
-# Main
-#
-
-# generator = Random()
-# generator.seed()        # Seed from current time
-
-# print("credit card generator by ..:: crazyjunkie ::..\n")
-
-# mastercard = credit_card_number(generator, mastercardPrefixList, 16, 10)
-# print(output("Mastercard", mastercard))
-
-# visa16 = credit_card_number(generator, visaPrefixList, 16, 10)
-# print(output("VISA 16 digit", visa16))
-
-# visa13 = credit_card_number(generator, visaPrefixList, 13, 5)
-# print(output("VISA 13 digit", visa13))
-
-# amex = credit_card_number(generator, amexPrefixList, 15, 5)
-# print(output("American Express", amex))
-
-# # Minor cards
-
-# discover = credit_card_number(generator, discoverPrefixList, 16, 3)
-# print(output("Discover", discover))
-
-# diners = credit_card_number(generator, dinersPrefixList, 14, 3)
-# print(output("Diners Club / Carte Blanche", diners))
-
-# enRoute = credit_card_number(generator, enRoutePrefixList, 15, 3)
-# print(output("enRoute", enRoute))
-
-# jcb = credit_card_number(generator, jcbPrefixList, 16, 3)
-# print(output("JCB", jcb))
-
-# voyager = credit_card_number(generator, voyagerPrefixList, 15, 3)
-# print(output("Voyager", voyager))
-
-# ^========================================================================================================^
