@@ -22,7 +22,7 @@ const client = axios.create({
 function MyAirline() {
   const airlineKeys = ["id", "name", "country id", "actions"]
   const [page, setPage] = useState([]);
-  const [url, setUrl] = useState("http://127.0.0.1:8000/api/models/my-own-flight/?page=1");
+  const [url, setUrl] = useState("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1");
   const [id, setID] = useState(0);
   const [airline, setAirline] = useState('');
   const [country, setCountry] = useState(0);
@@ -90,7 +90,7 @@ function MyAirline() {
   
   async function fetchMyAirline () {
     let myResponse = '';
-    await client.get("/api/models/my-own-airline/")
+    await client.get("/airline/models/my-own-airline/")
       .then(response => {
         console.log(response);
         myResponse = response;
@@ -130,7 +130,7 @@ function MyAirline() {
 
   async function deleteFlight (flight_id) {
     let myResponse = '';
-    await client.delete("/api/models/my-own-flight-delete/" + flight_id + "/")
+    await client.delete("/airline/models/my-own-flight-delete/" + flight_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -141,7 +141,7 @@ function MyAirline() {
           // console.log("Data = ", data, "   |   Response = ", myResponse);
           console.log("Successfully deleted a flight with id = ", flight_id)
           setDelErr('');
-          fetchFlights("http://127.0.0.1:8000/api/models/my-own-flight/?page=1");
+          fetchFlights("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1");
       }}).catch(error => {
         setDelErr([Object.values(error.response.data)]);
         console.log("Inside delErr = ", delErr);
@@ -162,7 +162,7 @@ function MyAirline() {
     var formData = new FormData();
     formData.append("country_id_id", newCountry);
     formData.append("name", newAirline);
-    client.patch("/api/models/my-own-airline/"+ id+"/", formData, {
+    client.patch("/airline/models/my-own-airline/"+ id+"/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -229,7 +229,7 @@ function MyAirline() {
 
   useEffect(() => {
     fetchMyAirline();
-    fetchFlights("http://127.0.0.1:8000/api/models/my-own-flight/?page=1");
+    fetchFlights("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1");
   }, []);
 
 
@@ -244,7 +244,7 @@ function MyAirline() {
     formData.append("remaining_tickets", ticket);
     formData.append("airline_company_id_id", id);
     
-    client.post("/api/models/my-own-flight-add/", formData, {
+    client.post("/airline/models/my-own-flight-add/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -263,7 +263,7 @@ function MyAirline() {
         setOrigin(''); 
         setDestination(''); 
         setTicket('');
-        fetchFlights("http://127.0.0.1:8000/api/models/my-own-flight/?page=1");
+        fetchFlights("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1");
       }
     }).catch(error => {
       setAddErr([Object.values(error.response.data)]);
@@ -282,7 +282,7 @@ function MyAirline() {
     formData.append("remaining_tickets", nTicket);
     formData.append("airline_company_id_id", id);
     console.log("In updateMyFlight! flightID = ",flightID);
-    client.patch("/api/models/my-own-flight/"+flightID+"/", formData, {
+    client.patch("/airline/models/my-own-flight/"+flightID+"/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -293,7 +293,7 @@ function MyAirline() {
     })
     .then(data => {
       if (myResponse.status === 200){
-        fetchFlights("http://127.0.0.1:8000/api/models/my-own-flight/?page=1");
+        fetchFlights("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1");
         setEditF(false);
         setNdepart('');
         setNland('');

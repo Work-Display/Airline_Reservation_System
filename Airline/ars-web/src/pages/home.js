@@ -55,7 +55,7 @@ function Home() {
     formData.append("password", password);
     formData.append("thumbnail", thumbnail);
     
-    client.post("/api/signup/", formData, {
+    client.post("/all/signup/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -75,7 +75,7 @@ function Home() {
   function submitLogin(e) {
     e.preventDefault();
     client.post(
-      "/api/login/",
+      "/all/login/",
       {
         username: username,
         password: password
@@ -96,7 +96,7 @@ function Home() {
   function submitLogout(e) {
     e.preventDefault();
     client.post(
-      "/api/logout/",
+      "/user/logout/",
       {withCredentials: true}
     ).then(function(res) {
       dispatch(updateUser());

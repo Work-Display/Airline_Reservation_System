@@ -41,7 +41,7 @@ function MyTickets() {
   
   async function fetchMyTickets () {
     let myResponse = '';
-    await client.get('/api/models/ticket-for-customers/')
+    await client.get('/customer/models/ticket-for-customers/')
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -67,7 +67,7 @@ function MyTickets() {
   
   async function deleteTicket (ticket_id) {
     let myResponse = '';
-    await client.delete("/api/models/ticket-for-customers/" + ticket_id + "/")
+    await client.delete("/customer/models/ticket-for-customers/" + ticket_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);

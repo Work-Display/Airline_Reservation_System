@@ -16,7 +16,7 @@ export const fetchUser = createAsyncThunk(
   'user/fetchUser',
   async () => {
     try {
-      const response = await client.get('/api/models/my-own-user/');
+      const response = await client.get('/user/models/my-own-user/');
       return response.data;
     } catch (error) {
       console.log("This is why user is null: ", error.response.data);

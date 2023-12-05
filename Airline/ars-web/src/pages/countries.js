@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 
 function Countries() {
   const [page, setPage] = useState([]);
-  const [url, setUrl] = useState("http://127.0.0.1:8000/api/models/country-for-all/?page=1");
+  const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/country-for-all/?page=1");
   const [id, setID] = useState(1);
   const [pageNum, setPageNum] = useState(1);
 
@@ -40,7 +40,7 @@ function Countries() {
 
     if (id){
       let myResponse = '';
-    await fetch("http://127.0.0.1:8000/api/models/country-for-all/"+id)
+    await fetch("http://127.0.0.1:8000/all/models/country-for-all/"+id)
       .then(response => {
         console.log(response);
         myResponse = response;
@@ -58,7 +58,7 @@ function Countries() {
       })
     }
     else{
-      fetchCountries("http://127.0.0.1:8000/api/models/country-for-all/?page=1");
+      fetchCountries("http://127.0.0.1:8000/all/models/country-for-all/?page=1");
     }
   }
 
@@ -76,7 +76,7 @@ function Countries() {
           <div className='center'>
             <TableCell>
             <h2>Page Number: </h2>
-            <input type="number" name="page" min="1" max="25" onChange={(e) => {setUrl("http://127.0.0.1:8000/api/models/country-for-all/?page=" + e.target.value); fetchCountries("http://127.0.0.1:8000/api/models/country-for-all/?page=" + e.target.value);}}/>
+            <input type="number" name="page" min="1" max="25" onChange={(e) => {setUrl("http://127.0.0.1:8000/all/models/country-for-all/?page=" + e.target.value); fetchCountries("http://127.0.0.1:8000/all/models/country-for-all/?page=" + e.target.value);}}/>
             <br/><br/>
             </TableCell>
             <TableCell>
@@ -87,7 +87,7 @@ function Countries() {
           </div>
           
           <br/>
-          <input type="reset" onClick={(e) => {fetchCountries("http://127.0.0.1:8000/api/models/country-for-all/?page=1");}}/>
+          <input type="reset" onClick={(e) => {fetchCountries("http://127.0.0.1:8000/all/models/country-for-all/?page=1");}}/>
           <br/>          
         </form>
       </div>

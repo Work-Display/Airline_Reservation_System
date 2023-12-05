@@ -21,7 +21,7 @@ function Flights() {
   const flightKeys = ["id", "airline company id", "origin country id", "destination country id", "departure time", "landing time", "remaining tickets", "buy ticket"]
   const [page, setPage] = useState([]);
   const [flights, setFlights] = useState([]);
-  const [url, setUrl] = useState("http://127.0.0.1:8000/api/models/flight-for-all/?page=1");
+  const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/flight-for-all/?page=1");
   const [id, setID] = useState(1);
 
   const [airline, setAirline] = useState('');
@@ -58,7 +58,7 @@ function Flights() {
 
     if (id){
       let myResponse = '';
-      await fetch("http://127.0.0.1:8000/api/models/flight-for-all/"+id)
+      await fetch("http://127.0.0.1:8000/all/models/flight-for-all/"+id)
         .then(response => {
           console.log(response);
           myResponse = response;
@@ -76,7 +76,7 @@ function Flights() {
         })
     }
     else{
-      fetchFlights("http://127.0.0.1:8000/api/models/flight-for-all/?page=1");
+      fetchFlights("http://127.0.0.1:8000/all/models/flight-for-all/?page=1");
     }
   }
 
@@ -91,7 +91,7 @@ function Flights() {
     formData.append("remaining_tickets", ticket);
     formData.append("airline_company_id_id", airline);
     
-    client.post("/api/get_flights_by_parameters/", formData, {
+    client.post("/all/get_flights_by_parameters/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -138,7 +138,7 @@ function Flights() {
 
           <TableCell>
           <h2>Page Number: </h2>
-          <input type="number" name="page" min="1" onChange={(e) => {setUrl("http://127.0.0.1:8000/api/models/flight-for-all/?page=" + e.target.value); fetchFlights("http://127.0.0.1:8000/api/models/flight-for-all/?page=" + e.target.value);}}/>
+          <input type="number" name="page" min="1" onChange={(e) => {setUrl("http://127.0.0.1:8000/all/models/flight-for-all/?page=" + e.target.value); fetchFlights("http://127.0.0.1:8000/all/models/flight-for-all/?page=" + e.target.value);}}/>
           <br/><br/>
           </TableCell>
           <TableCell>
@@ -157,7 +157,7 @@ function Flights() {
           </TableCell> 
           <br/>
   
-          <input type="reset" onClick={(e) => {fetchFlights("http://127.0.0.1:8000/api/models/flight-for-all/?page=1"); setShowIfBuy(false);}}/>
+          <input type="reset" onClick={(e) => {fetchFlights("http://127.0.0.1:8000/all/models/flight-for-all/?page=1"); setShowIfBuy(false);}}/>
           <br/>          
         </form>
       
@@ -225,7 +225,7 @@ function Flights() {
             <Form.Control type="number" min="1" max="860" placeholder="Enter remaining tickets" onChange={e => setTicket(e.target.value)} />
           </Form.Group>
 
-          <input type="reset" onClick={(e) => {fetchFlights("http://127.0.0.1:8000/api/models/flight-for-all/?page=1"); setLand(''); setDepart(''); setAirline(''); setOrigin(''); setDestination(''); setTicket('');}}/>
+          <input type="reset" onClick={(e) => {fetchFlights("http://127.0.0.1:8000/all/models/flight-for-all/?page=1"); setLand(''); setDepart(''); setAirline(''); setOrigin(''); setDestination(''); setTicket('');}}/>
 
           <Button variant="primary" type="submit">
             Search

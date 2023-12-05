@@ -34,7 +34,7 @@ function AdminCustomer() {
   
   async function fetchCustomers (page) {
     let myResponse = '';
-    await client.get('/api/models/customer-for-admins/?page='+page)
+    await client.get('/admin/models/customer-for-admins/?page='+page)
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -64,7 +64,7 @@ function AdminCustomer() {
     formData.append("credit_card_no", card);
     formData.append("user_id_id", customerUserId);
 
-    await client.post("/api/models/customer-for-admins/", formData, {
+    await client.post("/admin/models/customer-for-admins/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -92,7 +92,7 @@ function AdminCustomer() {
 
   async function deleteCustomer (customer_id) {
     let myResponse = '';
-    await client.delete("/api/models/customer-for-admins/" + customer_id + "/")
+    await client.delete("/admin/models/customer-for-admins/" + customer_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);

@@ -20,7 +20,7 @@ const client = axios.create({
 function Airlines() {
   const airlineKeys = ["id", "name", "country id"]
   const [page, setPage] = useState([]);
-  const [url, setUrl] = useState("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");
+  const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
   const [id, setID] = useState(1);
   const [currentUser, setCurrentUser] = useState('');
   const [role, setRole] = useState('');
@@ -29,7 +29,7 @@ function Airlines() {
 
   async function fetchRole(){
     let myResponse = '';
-    await client.get('/api/models/my-own-user/')
+    await client.get('/user/models/my-own-user/')
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -78,7 +78,7 @@ function Airlines() {
 
     if (id){
       let myResponse = '';
-      await fetch("http://127.0.0.1:8000/api/models/airline-for-all/"+id)
+      await fetch("http://127.0.0.1:8000/all/models/airline-for-all/"+id)
         .then(response => {
           console.log(response);
           myResponse = response;
@@ -96,7 +96,7 @@ function Airlines() {
         })
     }
     else{
-      fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");
+      fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
     }
   }
 
@@ -107,7 +107,7 @@ function Airlines() {
     formData.append("country_id_id", country);
     formData.append("name", airline);
     
-    client.post("/api/get_airlines_by_parameters/", formData, {
+    client.post("/all/get_airlines_by_parameters/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -143,7 +143,7 @@ function Airlines() {
           <div className='center'>
             <TableCell>
             <h2>Page Number: </h2>
-            <input type="number" name="page" min="1" onChange={(e) => {setUrl("http://127.0.0.1:8000/api/models/airline-for-all/?page=" + e.target.value); fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=" + e.target.value);}}/>
+            <input type="number" name="page" min="1" onChange={(e) => {setUrl("http://127.0.0.1:8000/all/models/airline-for-all/?page=" + e.target.value); fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=" + e.target.value);}}/>
             <br/><br/>
             </TableCell>
             <TableCell>
@@ -155,7 +155,7 @@ function Airlines() {
           <br/>
           <h3>TIPS:{<br/>}Only one of the above filters can be active at a time.</h3>
           <br/>
-          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");} }/>
+          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");} }/>
           <br/>          
         </form>
       
@@ -176,7 +176,7 @@ function Airlines() {
           <h3>TIPS:{<br/>}Feel free to overlay these filters.{<br/>}You must use exact values to get what you want (not partial).</h3>
           <br/>
 
-          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");  setCountry(''); setAirline('');}}/>
+          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");  setCountry(''); setAirline('');}}/>
           
           <Button variant="primary" type="submit">
             Search

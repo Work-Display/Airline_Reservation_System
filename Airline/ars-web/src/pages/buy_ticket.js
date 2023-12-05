@@ -68,7 +68,7 @@ function BuyTicket() {
 
   async function checkTicket () {
     let myResponse = '';
-    await client.get("/api/models/does-flight-has-tickets/" + flight_id + "/")
+    await client.get("/all/models/does-flight-has-tickets/" + flight_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -92,7 +92,7 @@ function BuyTicket() {
     var formData = new FormData();
     formData.append("flight_id_id", flightId);
     
-    client.post("/api/models/ticket-for-customers/", formData, {
+    client.post("/customer/models/ticket-for-customers/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -115,7 +115,7 @@ function BuyTicket() {
 
   async function checkCustomer () {
     let myResponse = '';
-    await client.get("/api/models/does-customer-exists/" + userID + "/")
+    await client.get("/customer/models/does-customer-exists/" + userID + "/")
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -190,7 +190,7 @@ function BuyTicket() {
     formData.append("phone_no", phone);
     formData.append("credit_card_no", card);
     
-    client.post("/api/models/become-a-customer/", formData, {
+    client.post("/customer/models/become-a-customer/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -212,7 +212,7 @@ function BuyTicket() {
 
   async function fetchMyCustomer () {
     let myResponse = '';
-    await client.get("/api/models/my-own-customer/")
+    await client.get("/customer/models/my-own-customer/")
       .then(response => {
         console.log(response);
         myResponse = response;
@@ -254,7 +254,7 @@ function BuyTicket() {
     formData.append("credit_card_no", nCard);
 
     console.log("In updateMyCustomer! customerID = ",customerID);
-    client.patch("/api/models/my-own-customer/"+customerID+"/", formData, {
+    client.patch("/customer/models/my-own-customer/"+customerID+"/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -265,7 +265,7 @@ function BuyTicket() {
     })
     .then(data => {
       if (myResponse.status === 200){
-        // fetchFlights("http://127.0.0.1:8000/api/models/my-own-flight/?page=1"); // fetch tickets here
+        // fetchFlights("http://127.0.0.1:8000/airline/models/my-own-flight/?page=1"); // fetch tickets here
         setEdit(false);
         setNfirstN('');
         setNlastN('');
@@ -302,7 +302,7 @@ function BuyTicket() {
   async function fetchFlightByID () {
     if (flightId !== null){
       let myResponse = '';
-      await fetch("http://127.0.0.1:8000/api/models/flight-for-all/"+ flightId)
+      await fetch("http://127.0.0.1:8000/all/models/flight-for-all/"+ flightId)
         .then(response => {
           console.log(response);
           myResponse = response;

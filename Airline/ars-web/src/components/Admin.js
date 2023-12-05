@@ -34,7 +34,7 @@ function Admin() {
   
   async function fetchAdmins (page) {
     let myResponse = '';
-    await client.get('/api/models/admin-for-admins/?page='+page)
+    await client.get('/admin/models/admin-for-admins/?page='+page)
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -61,7 +61,7 @@ function Admin() {
     formData.append("last_name", lastN);
     formData.append("user_id_id", adminUserId);
 
-    await client.post("/api/models/admin-for-admins/", formData, {
+    await client.post("/admin/models/admin-for-admins/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -86,7 +86,7 @@ function Admin() {
 
   async function deleteAdmin (admin_id) {
     let myResponse = '';
-    await client.delete("/api/models/my-own-admin-delete/" + admin_id + "/")
+    await client.delete("/admin/models/my-own-admin-delete/" + admin_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);

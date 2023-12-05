@@ -34,7 +34,7 @@ function AdminUser() {
     formData.append("thumbnail", thumbnail);
     formData.append("user_role_id", roleId);
     
-    client.post("/api/models/user-for-admins/", formData, {
+    client.post("/admin/models/user-for-admins/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -57,7 +57,7 @@ function AdminUser() {
     var formData = new FormData();
     formData.append("username", username);
     
-    client.post("/api/get-user-id-for-admins/", formData, {
+    client.post("/admin/get-user-id-for-admins/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

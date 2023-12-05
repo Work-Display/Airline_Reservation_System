@@ -56,7 +56,7 @@ function AdminAirline() {
     formData.append("country_id_id", countryId);
     formData.append("user_id_id", airlineUserId);
     
-    await client.post("/api/models/airline-for-admins/", formData, {
+    await client.post("/admin/models/airline-for-admins/", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -75,13 +75,13 @@ function AdminAirline() {
       console.log(error);
       setSuccess(false);
     }).then(() => {
-      fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");
+      fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
     });
 }
 
   async function deleteAirline (airline_id) {
     let myResponse = '';
-    await client.delete("/api/models/airline-for-admins/" + airline_id + "/")
+    await client.delete("/admin/models/airline-for-admins/" + airline_id + "/")
       .then(response => {
         myResponse = response;
         console.log(response);
@@ -97,7 +97,7 @@ function AdminAirline() {
         console.log("Inside delAirlineErr = ", delAirlineErr);
         console.log(error);
       }).then(() => {
-        fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");
+        fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
       });
   }
 
@@ -109,7 +109,7 @@ function AdminAirline() {
 
 
   useEffect(() => {
-    fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");
+    fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
   }, []);
 
 
@@ -131,12 +131,12 @@ function AdminAirline() {
             <div className='center'>
               <TableCell>
               <h2>Airlines Page: </h2>
-              <input type="number" name="page" min="1" onChange={(e) => { fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=" + e.target.value);}}/>
+              <input type="number" name="page" min="1" onChange={(e) => { fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=" + e.target.value);}}/>
               <br/><br/>
               </TableCell>
             </div>
             <br/>
-            <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/api/models/airline-for-all/?page=1");} }/>
+            <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");} }/>
             <br/>
           </form>
         </div>
