@@ -782,3 +782,8 @@ class UsernameSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
 
 
+
+class NameSerializer(serializers.Serializer):
+
+    model = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)

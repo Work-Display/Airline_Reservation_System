@@ -53,6 +53,7 @@ urlpatterns = [
 
     path('all/signup/', api.signup_api, name="signup_api"),
     path('all/login/', api.login_user_api, name="login_api"),
+    path('all/search_by_name/', api.get_instances_by_name, name="name_search"),
     path('all/get_flights_by_parameters/', api.get_flights_by_parameters_D, name="get_flights_by_parameters"),
     path('all/get_airlines_by_parameters/', api.get_airlines_by_parameters_D, name="get_airlines_by_parameters"),
     path('user/logout/', api.logout_user_api, name="logout_api"),

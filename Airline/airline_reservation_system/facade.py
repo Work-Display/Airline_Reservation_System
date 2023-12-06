@@ -122,18 +122,22 @@ class Facade_Base(ABC):
                     else:
                         instances = some_model.objects.filter(name__icontains=name)
                     logger.info(f"Successfully found the instances of {some_model} which contained {name = }, instances={instances}.")
-                    return instances
+                    if instances:
+                        return instances
+                    info_msg = f"{some_model} doesn't have any instances which contain {name = }."
+                    logger.info(info_msg)
+                    return False
                 except Exception as e:
-                    error_msg = f"{some_model} doesn't have any instances which contain name={name}."
-                    logger.error(f"Failed to get ids by name. {error_msg} {e}")
+                    error_msg = f"{some_model} doesn't have any instances which contain {name = }."
+                    logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg} {e}")
                     return False
             else:
                 error_msg = f"Bad input. The given model = {some_model}, is invalid. Valid models: {named_models}."
-                logger.error(f"Failed to get ids by name. {error_msg}")
+                logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg}")
                 return False
         else:
             error_msg = "Bad input. Name must be a string."
-            logger.error(f"Failed to get the instances. {error_msg}")
+            logger.error(f"Failed to get the instances of {some_model} by {name = }. {error_msg}")
             return False
 
 

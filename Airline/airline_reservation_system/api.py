@@ -1056,6 +1056,50 @@ def get_userId_by_username(request):
     return Response({'id': user_id}, status=status.HTTP_200_OK)
 
 
+@extend_schema(
+        request=NameSerializer,
+        responses={200: dict, 400:dict, 404: dict})
+@api_view(['POST'])
+def get_instances_by_name(request):
+    """
+        To search for existing instances by name, in the "model" field you must input one of the following options: "user" / "customer" / "admin" / "airline" / "country".
+    """
+
+    str2models = {"user":Users, "customer":Customers, "admin":Administrators, "airline":Airline_Companies , "country":Countries}
+    data = dict(request.data)
+    keys = str2models.keys()
+    model = data['model']
+    if (type(model) == list):
+        model = model[0]
+    if model not in keys:
+        err_msg = f"Bad input. Your {model = } must be one of these options: {list(keys)}."
+        logger.error(err_msg)
+        return Response({'Error': err_msg}, status=status.HTTP_400_BAD_REQUEST)
+
+    model = str2models[model]
+    name = data['name']
+    if (type(name) == list):
+        name = name[0]
+    instances = Facade_Base.get_instances_by_name(some_model=model, name=name)
+
+    if instances is False:
+        info_msg = f"Instances of {model} with {name = } don't exist."
+        logger.info(info_msg)
+        return Response({'Info': info_msg}, status=status.HTTP_404_NOT_FOUND)
+
+    cnt = 0
+    instances = list(instances)
+    print(f"{instances = }")
+    instances_dict = {}
+    if (type(instances) not in str2models.values()): # Always returns QuerySet.
+        for instance in instances:
+            cnt += 1
+            instances_dict[cnt] = model_to_dict(instance)
+    info_msg = f"Instances of {model} with {name = } do exist. Here they are: {instances_dict}."
+    logger.info(info_msg)
+    return Response({'found': instances_dict}, status=status.HTTP_200_OK)
+
+
 @extend_schema()
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
