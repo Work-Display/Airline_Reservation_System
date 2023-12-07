@@ -1088,13 +1088,38 @@ def get_instances_by_name(request):
         return Response({'Info': info_msg}, status=status.HTTP_404_NOT_FOUND)
 
     cnt = 0
-    instances = list(instances)
     print(f"{instances = }")
     instances_dict = {}
-    if (type(instances) not in str2models.values()): # Always returns QuerySet.
+    working_models = [Customers, Administrators, Airline_Companies]
+    if (instances.model in working_models): # Always returns QuerySet.
+        instances = list(instances)
         for instance in instances:
             cnt += 1
             instances_dict[cnt] = model_to_dict(instance)
+    elif(instances.model is Users):
+        users_dict = {}
+        for index, user in enumerate(instances, start=1):
+            image_data = user.thumbnail.read()
+            image_base64 = base64.b64encode(image_data).decode('utf-8')
+            users_dict[index] = {
+                'username': user.username,
+                'password': user.password,
+                'email': user.email,
+                'thumbnail': image_base64,
+                'user_role_id': user.user_role_id
+            }
+            instances_dict = users_dict
+    else: # Countries
+        countries_dict = {}
+        for index, country in enumerate(instances, start=1):
+            image_data = country.flag.read()
+            image_base64 = base64.b64encode(image_data).decode('utf-8')
+            countries_dict[index] = {
+                'id': country.id,
+                'flag': image_base64,
+                'name': country.name,
+            } 
+            instances_dict = countries_dict
     info_msg = f"Instances of {model} with {name = } do exist. Here they are: {instances_dict}."
     logger.info(info_msg)
     return Response({'found': instances_dict}, status=status.HTTP_200_OK)
