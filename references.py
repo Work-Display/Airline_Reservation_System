@@ -618,6 +618,7 @@
     # https://stackoverflow.com/questions/41610811/react-js-how-to-send-a-multipart-form-data-to-server
     # https://stackoverflow.com/questions/58116211/how-to-redirect-to-another-page-on-button-click-in-reactjs
     # https://stackoverflow.com/questions/56769076/how-to-show-base64-image-in-react
+    # https://dev.to/salehmubashar/search-bar-in-react-js-545l
 
 
 # ===========================================================================================================================

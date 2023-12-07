@@ -4,15 +4,22 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CountryTableRow from '../components/CountryTableRow';
 import { TableCell } from "@mui/material";
+import TextField from "@mui/material/TextField";
+
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
 
+const client = axios.create({
+  baseURL: "http://127.0.0.1:8000"
+});
+
 
 function Countries() {
   const [page, setPage] = useState([]);
   const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/country-for-all/?page=1");
+  const [search, setSearch] = useState('')
   const [id, setID] = useState(1);
   const [pageNum, setPageNum] = useState(1);
 
@@ -62,6 +69,34 @@ function Countries() {
     }
   }
 
+  async function handleInputChange (search) { 
+    let myResponse = '';
+    var formData = new FormData();
+    formData.append("model", "country");
+    formData.append("name", search);
+    
+    await client.post("/all/search_by_name/", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+     }})
+    .then(response => {
+      console.log(response);
+      myResponse = response;
+      return response.json;
+    })
+    .then(data => {
+      if (myResponse.status === 200){
+        console.log("search found = ", myResponse.data.found);
+        const foundList = Object.values(myResponse.data.found);
+        setPage(foundList);
+      }else{
+        setPage([]);
+      }
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
   return (
     <div className="App">
 
@@ -73,6 +108,19 @@ function Countries() {
           <h3>TIPS:{<br/>}Only one of the filters below can be active at a time.{<br/>}There are 25 pages of countries available,{<br/>}and 249 countries in total.</h3>
           <br/>
           <hr className='one' style={{width:'56%'}}/>
+          <br/>
+          <div className="search">
+            <TextField
+              className="custom-textfield"
+              id="outlined-basic"
+              variant="outlined"
+              onChange= {e => {handleInputChange(e.target.value); setSearch(e.target.value);}}
+              fullWidth
+              label="Search"
+              placeholder='Type to search'
+            />
+          </div>
+          <br/>
           <div className='center'>
             <TableCell>
             <h2>Page Number: </h2>
@@ -87,7 +135,7 @@ function Countries() {
           </div>
           
           <br/>
-          <input type="reset" onClick={(e) => {fetchCountries("http://127.0.0.1:8000/all/models/country-for-all/?page=1");}}/>
+          <input type="reset" onClick={(e) => {fetchCountries("http://127.0.0.1:8000/all/models/country-for-all/?page=1"); setSearch('');}}/>
           <br/>          
         </form>
       </div>
