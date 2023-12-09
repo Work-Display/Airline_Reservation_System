@@ -1090,8 +1090,8 @@ def get_instances_by_name(request):
     cnt = 0
     print(f"{instances = }")
     instances_dict = {}
-    working_models = [Customers, Administrators, Airline_Companies]
-    if (instances.model in working_models): # Always returns QuerySet.
+    working_models = [Customers, Administrators]
+    if (instances.model in working_models): 
         instances = list(instances)
         for instance in instances:
             cnt += 1
@@ -1109,6 +1109,15 @@ def get_instances_by_name(request):
                 'user_role_id': user.user_role_id
             }
             instances_dict = users_dict
+    elif(instances.model is Airline_Companies):
+        airlines_dict = {}
+        for index, airline in enumerate(instances, start=1):
+            airlines_dict[index] = {
+                'id': airline.id,
+                'name': airline.name,
+                'country_id_id': airline.country_id_id
+            }
+            instances_dict = airlines_dict
     else: # Countries
         countries_dict = {}
         for index, country in enumerate(instances, start=1):

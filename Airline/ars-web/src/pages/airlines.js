@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import TableRow from '../components/TableRow';
 import { TableCell } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
@@ -22,6 +23,7 @@ function Airlines() {
   const [page, setPage] = useState([]);
   const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");
   const [id, setID] = useState(1);
+  const [search, setSearch] = useState('');
   const [currentUser, setCurrentUser] = useState('');
   const [role, setRole] = useState('');
   const [airline, setAirline] = useState('');
@@ -132,6 +134,34 @@ function Airlines() {
     });
   }
 
+  async function handleInputChange (search) { 
+    let myResponse = '';
+    var formData = new FormData();
+    formData.append("model", "airline");
+    formData.append("name", search);
+
+    await client.post("/all/search_by_name/", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+     }})
+    .then(response => {
+      console.log(response);
+      myResponse = response;
+      return response.json;
+    })
+    .then(data => {
+      if (myResponse.status === 200){
+        console.log("search found = ", myResponse.data.found);
+        const foundList = Object.values(myResponse.data.found);
+        setPage(foundList);
+      }else{
+        setPage([]);
+      }
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+  
   return (
     <div className="App">
 
@@ -153,9 +183,25 @@ function Airlines() {
             </TableCell>
           </div>
           <br/>
+
+          <div className="search">
+            <TextField
+              className="custom-textfield"
+              id="outlined-basic"
+              variant="outlined"
+              onChange= {e => {handleInputChange(e.target.value); setSearch(e.target.value);}}
+              fullWidth
+              label="Search"
+              placeholder='Type a name to search'
+            />
+          </div>
+
+          <br/><br/>
+          <hr className='one' style={{width:'90%', borderWidth: '1.4px'}}/>
+          <br/>
           <h3>TIPS:{<br/>}Only one of the above filters can be active at a time.</h3>
           <br/>
-          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");} }/>
+          <input type="reset" onClick={(e) => {fetchAirlines("http://127.0.0.1:8000/all/models/airline-for-all/?page=1");  setSearch('');} }/>
           <br/>          
         </form>
       
@@ -171,7 +217,7 @@ function Airlines() {
             <Form.Control type="number" min="1" placeholder="Enter the airline's country id" onChange={e => setCountry(e.target.value)} />
           </Form.Group>
           <br/><br/>
-          <hr className='one' style={{width:'90%'}}/>
+          <hr className='one' style={{width:'90%', borderWidth: '1.4px'}}/>
           <br/>
           <h3>TIPS:{<br/>}Feel free to overlay these filters.{<br/>}You must use exact values to get what you want (not partial).</h3>
           <br/>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import TableRowDel from './TableRowDel';
 import { TableCell } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +24,7 @@ function Admin() {
   const adminKeys =  ['id', 'first name', 'last name', 'user id', 'actions']
   const [admins, setAdmins] = useState('');
   const [adminUserId, setAdminUserId] = useState('');
+  const [search, setSearch] = useState('');
   const [firstN, setFirstN] = useState('');
   const [lastN, setLastN] = useState('');
 
@@ -113,6 +115,34 @@ function Admin() {
     deleteAdmin(admin_id);
   };
 
+  async function handleInputChange (search) { 
+    let myResponse = '';
+    var formData = new FormData();
+    formData.append("model", "admin");
+    formData.append("name", search);
+
+    await client.post("/all/search_by_name/", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+     }})
+    .then(response => {
+      console.log(response);
+      myResponse = response;
+      return response.json;
+    })
+    .then(data => {
+      if (myResponse.status === 200){
+        console.log("search found = ", myResponse.data.found);
+        const foundList = Object.values(myResponse.data.found);
+        let fake = foundList.map(item => ({ ...item, actions: null }));
+        setAdmins(fake);
+      }else{
+        setAdmins([]);
+      }
+    }).catch(error => {
+      console.log(error);
+    })
+  }
 
   useEffect(() => {
     fetchAdmins(1);
@@ -138,11 +168,24 @@ function Admin() {
               <TableCell>
               <h2>Admins Page: </h2>
               <input type="number" name="page" min="1" onChange={(e) => { fetchAdmins(e.target.value);}}/>
-              <br/><br/>
+              <br/>
               </TableCell>
             </div>
+            <div className="search">
+              <TextField
+                className="custom-textfield"
+                id="outlined-basic"
+                variant="outlined"
+                onChange= {e => {handleInputChange(e.target.value); setSearch(e.target.value);}}
+                fullWidth
+                label="Search"
+                placeholder='Type a name to search'
+              />
+            </div>
             <br/>
-            <input type="reset" onClick={(e) => { fetchAdmins(1);} }/>
+            <hr className='one' style={{width:'90%', borderWidth: '1.4px'}}/>
+            <br/>
+            <input type="reset" onClick={(e) => { fetchAdmins(1);  setSearch('');} }/>
             <br/>
           </form>
         </div>

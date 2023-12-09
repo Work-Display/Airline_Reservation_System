@@ -19,7 +19,7 @@ const client = axios.create({
 function Countries() {
   const [page, setPage] = useState([]);
   const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/country-for-all/?page=1");
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
   const [id, setID] = useState(1);
   const [pageNum, setPageNum] = useState(1);
 
@@ -117,7 +117,7 @@ function Countries() {
               onChange= {e => {handleInputChange(e.target.value); setSearch(e.target.value);}}
               fullWidth
               label="Search"
-              placeholder='Type to search'
+              placeholder='Type a name to search'
             />
           </div>
           <br/>

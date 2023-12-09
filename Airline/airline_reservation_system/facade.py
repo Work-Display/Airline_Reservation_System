@@ -118,7 +118,7 @@ class Facade_Base(ABC):
                     if name_key==1:
                         instances = some_model.objects.filter(username__icontains=name)
                     elif name_key==2:
-                        instances = some_model.objects.filter(first_name__icontains=name)
+                        instances = some_model.objects.filter( Q(first_name__icontains=name) | Q(last_name__icontains=name))
                     else:
                         instances = some_model.objects.filter(name__icontains=name)
                     logger.info(f"Successfully found the instances of {some_model} which contained {name = }, instances={instances}.")
