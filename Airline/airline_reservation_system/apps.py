@@ -18,7 +18,12 @@ class AirlineReservationSystemConfig(AppConfig):
         # If runserver wasn't run yet, and migrations are complete, DO THIS ONCE:
         management.call_command("makemigrations", no_input=True)
         management.call_command("migrate", no_input=True)
-        from .utiles import populate_all
+
+        from .utiles import populate_all, initialize_api_counter
+
+        initialize_api_counter()
+        logger.info("Api counter initialization is complete.")
+
         if not(populate_all()):
             logger.error(f"Failed to populate the database with the initial data of ARS.")
             return False

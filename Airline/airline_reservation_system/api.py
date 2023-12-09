@@ -3,6 +3,7 @@ from .facade import *
 from .dal import *
 from .utiles import prepare_profile
 from .serializers import *
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes
@@ -976,6 +977,27 @@ def logout_user_api(request):
 
     return response
 
+@extend_schema(description="The use of this API is limited to only 3 times, counting since the very initiation of the database. "
+                "This API was made to generate some fake data for this project, which was created to demonstrate my skills to potential employers. "
+                "So it doesn't need much data to begin with.", responses={200: str, 403:str, 501:str})
+@api_view(['POST'])
+@allowed_roles(['Administrator'])
+def randomly_populate_all_api(request):
+
+    # Checking the limit.
+    counter = get_object_or_404(APICounter, pk=1) 
+    if counter.count >= 3:
+        return Response("Sorry, the API limit was exceeded. This API can't be used more than 3 times in total by everyone.", status=status.HTTP_403_FORBIDDEN)
+
+    # API logic here
+    bool = randomly_populate_all(amount=1, any_role=2)
+
+    if bool is False:
+        return Response("Whoops! Something went wrong. Go check the logs.", status=status.HTTP_501_NOT_IMPLEMENTED)
+    
+    counter.count += 1
+    counter.save()
+    return Response("Successfully populated all! Go check out the tables.", status=status.HTTP_200_OK)
 
 @extend_schema(
         request=FlightParametersSerializer,

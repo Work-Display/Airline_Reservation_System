@@ -57,6 +57,7 @@ urlpatterns = [
     path('all/get_flights_by_parameters/', api.get_flights_by_parameters_DA, name="get_flights_by_parameters"),
     path('all/get_airlines_by_parameters/', api.get_airlines_by_parameters_D, name="get_airlines_by_parameters"),
     path('user/logout/', api.logout_user_api, name="logout_api"),
+    path('admin/randomly_populate_all/', api.randomly_populate_all_api, name="populate_all"),
     path('admin/get-user-id-for-admins/', api.get_userId_by_username, name="user-id"),
 
 ] 

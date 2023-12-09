@@ -27,6 +27,8 @@
         # before deployment: npm run build 
         # for deployment use: npm start build 
 
+    # Set the API counter manually:
+        # python manage.py set_apicounter <value>
 
 # ===========================================================================================================================
 # 95% --> Django refs:

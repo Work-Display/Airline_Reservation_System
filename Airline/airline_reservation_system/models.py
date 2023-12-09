@@ -73,3 +73,7 @@ class Tickets(models.Model):
 
     class Meta:
         unique_together = ["flight_id", "customer_id"]
+
+
+class APICounter(models.Model):
+    count = models.PositiveIntegerField(default=0)

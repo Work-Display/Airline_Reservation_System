@@ -59,6 +59,15 @@ def get_user_id_from_session(request:request):
     logger.info(info_msg)
     return user_id
 
+def initialize_api_counter():
+    """
+    Will be used to limit the "randomly_populate_all_api" to 3 times in total, regardless of server reloads.
+    This is done so that no one could fill the database with too much fake data.
+    """
+    counter, created = APICounter.objects.get_or_create(pk=1)
+    if created:
+        counter.count = 0
+        counter.save()
 
 def prepare_profile(profile:str):
     profile = str(profile)
@@ -1457,8 +1466,8 @@ def randomly_populate_users(amount:int, any_role:int):
             password = randominfo.random_password(length=6, special_chars=False)
             img_size = (450,450)
             profile_pic = get_random_image(img_size) 
-            profile_pic = Image.fromarray((profile_pic * 255).astype('uint8')).save('././images2test/random_profiles/pic.jpg')
-            profile_pic = SimpleUploadedFile(name='test_image.jpg', content=open("././images2test/random_profiles/pic.jpg", 'rb').read(), content_type='image/jpg')
+            profile_pic = Image.fromarray((profile_pic * 255).astype('uint8')).save('./web-design/random_gen/pic.jpg')
+            profile_pic = SimpleUploadedFile(name='test_image.jpg', content=open('./web-design/random_gen/pic.jpg', 'rb').read(), content_type='image/jpg')
             user_FD = {'username':username, 'email':email, 'password':password, 'user_role_id':role, 'thumbnail':profile_pic}
             user = val_add_user(user_field_data=user_FD)
             if not(user):
@@ -1485,8 +1494,7 @@ def randomly_populate_all(amount:int, any_role:bool):
         If "any_role" is 2, AMOUNT will get OVERWRITTEN to 10, and all roles will get added with tactful proportions: 7/10 customers, 2/10 airlines, 1/10 administrator.
     (* In case all those while loops throw off your internal alarms for potential infinite loops, DW. They're there only as a means for a very unlikely insurance. 
     I skimmed over the data.csv file which 'randominfo' uses, and the other sources that this function bases its data generation upon, and it seems that all the data there is valid 
-    by ARS's standards. So this shouldn't be too much of a problem performance-wise. Also, in the front-end I'll limit the use of this function to only 1 use per admin, 
-    and only to mode (any_role = ) 2.)
+    by ARS's standards. So this shouldn't be too much of a problem performance-wise. Also, I'll limit the use of this function to 3 times, and only to mode any_role = 2.)
     """
     users = randomly_populate_users(amount=amount, any_role=any_role)
     if not users:
