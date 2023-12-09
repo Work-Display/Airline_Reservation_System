@@ -18,7 +18,7 @@ const client = axios.create({
 
 
 function Flights() {
-  const flightKeys = ["id", "airline company id", "origin country id", "destination country id", "departure time", "landing time", "remaining tickets", "buy ticket"]
+  const flightKeys = ["id", "airline company", "origin country", "destination country", "departure time", "landing time", "remaining tickets", "buy ticket"]
   const [page, setPage] = useState([]);
   const [flights, setFlights] = useState([]);
   const [url, setUrl] = useState("http://127.0.0.1:8000/all/models/flight-for-all/?page=1");
@@ -84,12 +84,12 @@ function Flights() {
     e.preventDefault();
     let myResponse = '';
     var formData = new FormData();
-    formData.append("origin_country_id_id", origin);
-    formData.append("destination_country_id_id", destination);
+    formData.append("origin_country", origin);
+    formData.append("destination_country", destination);
     formData.append("departure_time", depart);
     formData.append("landing_time", land);
     formData.append("remaining_tickets", ticket);
-    formData.append("airline_company_id_id", airline);
+    formData.append("airline_company", airline);
     
     client.post("/all/get_flights_by_parameters/", formData, {
       headers: {
@@ -196,18 +196,18 @@ function Flights() {
           <hr className='min'/>
 
           <Form.Group className="mb-3" controlId="formBasicUsername">
-            <Form.Label>Airline Company ID: </Form.Label>
-            <Form.Control type="number" min="1" placeholder="Enter airline company id" onChange={e => setAirline(e.target.value)} />
+            <Form.Label>Airline Company: </Form.Label>
+            <Form.Control type="text" placeholder="Enter airline company" onChange={e => setAirline(e.target.value)} />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicUsername">
-            <Form.Label>Origin country ID: </Form.Label>
-            <Form.Control type="number" min="1" placeholder="Enter origin country id" onChange={e => setOrigin(e.target.value)} />
+            <Form.Label>Origin country: </Form.Label>
+            <Form.Control type="text" placeholder="Enter origin country" onChange={e => setOrigin(e.target.value)} />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicUsername">
-            <Form.Label>Destination country ID: </Form.Label>
-            <Form.Control type="number" min="1" placeholder="Enter destination country id" onChange={e => setDestination(e.target.value)} />
+            <Form.Label>Destination country: </Form.Label>
+            <Form.Control type="text" placeholder="Enter destination country" onChange={e => setDestination(e.target.value)} />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicUsername">

@@ -46,6 +46,14 @@ class Facade_Base(ABC):
         return failed, flights
     
     @staticmethod
+    def get_flights_by_parameters_DynamicA(filters:dict):
+        failed = False
+        flights = dal.get_flights_by_parameters_DA(filters=filters)
+        if type(flights)==str:
+            failed = True
+        return failed, flights
+    
+    @staticmethod
     def get_all_airlines():
         airlines = dal.DAL.get_all_instances(some_model=Airline_Companies)                                                                             
         return airlines
@@ -103,42 +111,6 @@ class Facade_Base(ABC):
             logger.error(error_msg)
             return False
         return True 
-    
-    @staticmethod
-    def get_instances_by_name(some_model:type[models.Model], name:str):
-        """
-        Searches within "some_model" for the instances that contain "name" in their name field.
-        It then returns these instances if it succeeded, and returns False upon failure. 
-        """
-        named_models = {Users:1, Customers:2, Administrators:2, Airline_Companies:3 , Countries:3} # name_fields = {1:"username", 2:"first_name", 3:"name"}
-        if type(name) is str:
-            if (some_model in named_models.keys()):
-                name_key = named_models[some_model]
-                try:
-                    if name_key==1:
-                        instances = some_model.objects.filter(username__icontains=name)
-                    elif name_key==2:
-                        instances = some_model.objects.filter( Q(first_name__icontains=name) | Q(last_name__icontains=name))
-                    else:
-                        instances = some_model.objects.filter(name__icontains=name)
-                    logger.info(f"Successfully found the instances of {some_model} which contained {name = }, instances={instances}.")
-                    if instances:
-                        return instances
-                    info_msg = f"{some_model} doesn't have any instances which contain {name = }."
-                    logger.info(info_msg)
-                    return False
-                except Exception as e:
-                    error_msg = f"{some_model} doesn't have any instances which contain {name = }."
-                    logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg} {e}")
-                    return False
-            else:
-                error_msg = f"Bad input. The given model = {some_model}, is invalid. Valid models: {named_models}."
-                logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg}")
-                return False
-        else:
-            error_msg = "Bad input. Name must be a string."
-            logger.error(f"Failed to get the instances of {some_model} by {name = }. {error_msg}")
-            return False
 
 
 class Anonymous_Facade(Facade_Base):

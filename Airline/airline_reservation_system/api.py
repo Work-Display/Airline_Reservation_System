@@ -324,6 +324,15 @@ class FlightViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
 
+class ShowFlightViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Flights to be viewed.
+    """
+    queryset = Flights.objects.all().order_by('id')
+    serializer_class = ShowFlightSerializer
+    http_method_names = ['get']
+
+
 @method_decorator(allowed_roles(['Customer']), name='dispatch')
 class TicketViewSet(viewsets.ModelViewSet):
     """
@@ -1000,6 +1009,41 @@ def get_flights_by_parameters_D(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+@extend_schema(
+        request=FlightParametersSerializerA,
+        responses={200: dict, 404: str, 400: dict})
+@api_view(['POST'])
+def get_flights_by_parameters_DA(request):
+
+    serializer = FlightParametersSerializerA(data=request.data)
+    if serializer.is_valid():
+        filters = dict(serializer.data)
+
+        failed, flights = Facade_Base.get_flights_by_parameters_DynamicA(filters=filters)
+        
+        if failed==False:
+            cnt = 0
+            flights = list(flights)
+            print(f"{flights = }")
+            filtered_flights = {}
+            if (type(flights)!=Flights): # Always returns QuerySet.
+                for flight in flights:
+                    cnt += 1
+                    # filtered_flights[cnt] = model_to_dict(flight)
+                    filtered_flights[cnt] = ShowFlightSerializer(flight).data
+            print(f"{filtered_flights = }")
+            if (filtered_flights == {}):
+                return Response("No flights with the parameters that you've requested exist.", status=status.HTTP_404_NOT_FOUND)
+            return Response(filtered_flights, status=status.HTTP_200_OK)
+            
+        return Response(flights, status=status.HTTP_404_NOT_FOUND)
+
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @extend_schema(
         request=AirlineParametersSerializer,
         responses={200: dict, 404: str, 400: dict})
@@ -1080,7 +1124,7 @@ def get_instances_by_name(request):
     name = data['name']
     if (type(name) == list):
         name = name[0]
-    instances = Facade_Base.get_instances_by_name(some_model=model, name=name)
+    instances = DAL.get_instances_by_name(some_model=model, name=name)
 
     if instances is False:
         info_msg = f"Instances of {model} with {name = } don't exist."

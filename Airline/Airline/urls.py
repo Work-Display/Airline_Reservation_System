@@ -13,7 +13,7 @@ customer = DefaultRouter()
 # ===================================================================================
 all.register(r"country-for-all", api.CountryViewSet)
 all.register(r"airline-for-all", api.AirlineViewSet)
-all.register(r"flight-for-all", api.FlightViewSet)
+all.register(r"flight-for-all", api.ShowFlightViewSet)
 all.register(r"does-flight-has-tickets", api.TicketExistsViewSet)
 
 # ===================================================================================
@@ -54,7 +54,7 @@ urlpatterns = [
     path('all/signup/', api.signup_api, name="signup_api"),
     path('all/login/', api.login_user_api, name="login_api"),
     path('all/search_by_name/', api.get_instances_by_name, name="name_search"),
-    path('all/get_flights_by_parameters/', api.get_flights_by_parameters_D, name="get_flights_by_parameters"),
+    path('all/get_flights_by_parameters/', api.get_flights_by_parameters_DA, name="get_flights_by_parameters"),
     path('all/get_airlines_by_parameters/', api.get_airlines_by_parameters_D, name="get_airlines_by_parameters"),
     path('user/logout/', api.logout_user_api, name="logout_api"),
     path('admin/get-user-id-for-admins/', api.get_userId_by_username, name="user-id"),

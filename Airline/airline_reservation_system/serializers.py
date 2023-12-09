@@ -1,6 +1,7 @@
 from django.http import HttpResponse, request
 from rest_framework import serializers, status
 from .models import *
+from .dal import DAL
 from .validators import *
 from .utiles import *
 from django.contrib.auth.hashers import make_password
@@ -756,6 +757,34 @@ class FlightParametersSerializer(serializers.Serializer):
     
 
 
+class FlightParametersSerializerA(serializers.Serializer):
+
+    flightFields = ['airline_company', 'origin_country', 'destination_country', 'departure_time', 'landing_time', 'remaining_tickets']
+    origin_country = serializers.CharField(allow_null=True, required=False)
+    destination_country = serializers.CharField(allow_null=True, required=False)
+    departure_time = serializers.DateTimeField(allow_null=True, required=False)
+    landing_time = serializers.DateTimeField(allow_null=True, required=False)
+    remaining_tickets = serializers.IntegerField(allow_null=True, required=False)
+    airline_company = serializers.CharField(allow_null=True, required=False)
+
+    class Meta:
+        extra_kwargs = {
+                        "airline_company": {"required": False, "allow_null": True},
+                        "origin_country": {"required": False, "allow_null": True},
+                        "destination_country": {"required": False, "allow_null": True},
+                        "departure_time": {"required": False, "allow_null": True},
+                        "landing_time": {"required": False, "allow_null": True},
+                        "remaining_tickets": {"required": False, "allow_null": True}}
+
+    def validate(self, data):
+        data = dict(data)
+        filters = {}
+        for key, value in data.items():
+            filters[key] = value
+        return filters
+    
+
+
 class AirlineParametersSerializer(serializers.Serializer):
 
     global airlineFields
@@ -774,6 +803,31 @@ class AirlineParametersSerializer(serializers.Serializer):
         for key, value in data.items():
             filters[key] = value
         return filters
+    
+
+class ShowFlightSerializer(serializers.ModelSerializer):
+    airline_company = serializers.SerializerMethodField()
+    origin_country = serializers.SerializerMethodField()
+    destination_country = serializers.SerializerMethodField()
+
+    def get_airline_company(self, obj):
+        airline_id = obj.airline_company_id.id
+        val = DAL.get_name_by_id(some_model=Airline_Companies, id=airline_id)
+        return val
+    
+    def get_origin_country(self, obj):
+        country_id = obj.origin_country_id.id
+        val = DAL.get_name_by_id(some_model=Countries, id=country_id)
+        return val
+    
+    def get_destination_country(self, obj):
+        country_id = obj.destination_country_id.id
+        val = DAL.get_name_by_id(some_model=Countries, id=country_id)
+        return val
+
+    class Meta:
+        model = Flights  
+        fields = ['id', 'airline_company', 'origin_country', 'destination_country', 'departure_time', 'landing_time', 'remaining_tickets']
     
 
 

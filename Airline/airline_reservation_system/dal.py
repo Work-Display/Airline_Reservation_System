@@ -174,6 +174,106 @@ class DAL:
             msg = f"Failed to remove an instance from {some_model}, id = {id}."
             return False, msg
 
+    @staticmethod
+    def get_instances_by_name(some_model:type[models.Model], name:str):
+        """
+        Searches within "some_model" for the instances that contain "name" in their name field.
+        It then returns these instances if it succeeded, and returns False upon failure. 
+        """
+        named_models = {Users:1, Customers:2, Administrators:2, Airline_Companies:3 , Countries:3} # name_fields = {1:"username", 2:"first_name", 3:"name"}
+        if type(name) is str:
+            if (some_model in named_models.keys()):
+                name_key = named_models[some_model]
+                try:
+                    if name_key==1:
+                        instances = some_model.objects.filter(username__icontains=name)
+                    elif name_key==2:
+                        instances = some_model.objects.filter( Q(first_name__icontains=name) | Q(last_name__icontains=name))
+                    else:
+                        instances = some_model.objects.filter(name__icontains=name)
+                    logger.info(f"Successfully found the instances of {some_model} which contained {name = }, instances={instances}.")
+                    if instances:
+                        return instances
+                    info_msg = f"{some_model} doesn't have any instances which contain {name = }."
+                    logger.info(info_msg)
+                    return False
+                except Exception as e:
+                    error_msg = f"{some_model} doesn't have any instances which contain {name = }."
+                    logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg} {e}")
+                    return False
+            else:
+                error_msg = f"Bad input. The given model = {some_model}, is invalid. Valid models: {named_models}."
+                logger.error(f"Failed to get instances of {some_model} by {name = }. {error_msg}")
+                return False
+        else:
+            error_msg = "Bad input. Name must be a string."
+            logger.error(f"Failed to get the instances of {some_model} by {name = }. {error_msg}")
+            return False
+        
+    @staticmethod
+    def get_id_by_name(some_model:type[models.Model], name:str):
+        """
+        Created for the advanced flight search.
+        'some_model' can be either Countries or Airline_Companies.
+        Upon success it returns the id of the {some_model} instance whose name = {name}.
+        Upon failure it returns None. 
+        """
+        valid_models = (Airline_Companies, Countries)
+        if type(name) is str:
+            if (some_model in valid_models):
+                try:
+                    instances = DAL.get_instances_by_name(some_model=some_model, name=name)
+                    if (type(instances) is False):
+                        logger.info(f"{some_model} doesn't have any instances with {name = }.")
+                        return None
+                    if instances.count() == 1:
+                        obj = instances.first()
+                        id = obj.id
+                        logger.info(f"{some_model} has an instance with {name = }, and its {id = }.")
+                        return id
+                    else:
+                        logger.info(f"{some_model} doesn't have any instances with {name = } (the country name search came up with more than 1 result).")
+                        return None
+                except Exception as e:
+                    logger.error(f"Failed to get the id of the {some_model} instance with {name = }. Error: {e}")
+                    return None
+            else:
+                error_msg = f"Bad input. The given model = {some_model}, is invalid. Valid models: {valid_models}."
+                logger.error(f"Failed to get the id of the {some_model} instance with {name = }. {error_msg}")
+                return None
+        else:
+            error_msg = f"Bad input. 'name' = {name} must be a string."
+            logger.error(f"Failed to get the id of the {some_model} instance with {name = }. {error_msg}")
+            return None
+        
+    @staticmethod
+    def get_name_by_id(some_model:type[models.Model], id:int):
+        """
+        'some_model' can be either Countries or Airline_Companies.
+        Upon success it returns the name of the {some_model} instance whose id = {id}.
+        Upon failure it returns False. 
+        """
+        valid_models = (Airline_Companies, Countries)
+        if type(id) is int:
+            if (some_model in valid_models):
+                try:
+                    instance = DAL.get_instance_by_id(some_model=some_model, id=id)
+                    if (type(instance) is str):
+                        raise Exception(f"{some_model} doesn't have any instances with {id = }.")
+                    name = instance.name
+                    logger.info(f"Successfully got the {name = }, of the {some_model} instance with {id = }.")
+                    return name
+                except Exception as e:
+                    logger.error(f"Failed to get the name of the {some_model} instance with {id = }. Error: {e}")
+                    return False
+            else:
+                error_msg = f"Bad input. The given model = {some_model}, is invalid. Valid models: {valid_models}."
+                logger.error(f"Failed to get the name of the {some_model} instance with {id = }. {error_msg}")
+                return False
+        else:
+            error_msg = f"Bad input. 'id' = {id} must be an integer."
+            logger.error(f"Failed to get the name of the {some_model} instance with {id = }. {error_msg}")
+            return False
 
 # ===========================================================================================================================
 # USER:
@@ -377,6 +477,60 @@ def get_flights_by_parameters_D(filters:dict):
         err_msg = f"Failed to get flights by parameters, {filters = }. Error: {e}"
         logger.error(err_msg)
         return err_msg
+
+
+def get_flights_by_parameters_DA(filters:dict):
+    """
+    DA stands for dynamic & advanced.
+    It works with some name field inputs instead of with ids, and that's what differs it from other versions of this filtering functionality.
+    This one is currently being used used on the flights page, while the other 'get_flights_by_parameters' functions are just collecting dust. 
+    """
+
+    if (type(filters)!=dict):
+        err_msg = f"Bad input. Failed to get flights by parameters, 'filters' must be a dictionary, not {type(filters)}."
+        logger.error(err_msg)
+        return err_msg
+    
+    if (len(filters)<1):
+        err_msg = f"Bad input. Failed to get flights by parameters, 'filters' must be a dictionary with at least one item."
+        logger.error(err_msg)
+        return err_msg
+    
+    valid_filters = ['airline_company', 'origin_country', 'destination_country', 'departure_time', 'landing_time', 'remaining_tickets']
+    good_filters = {
+    key: value
+    for key, value in filters.items()
+    if ((key in valid_filters) and (value!=None))
+    }
+
+    if (len(good_filters)<1):
+        err_msg = f"Bad input. Failed to get flights by parameters, 'filters' must be a dictionary with at least one valid filter name key. {valid_filters = }."
+        logger.error(err_msg)
+        return err_msg
+    
+    edited_filters = {}
+    for key, val in good_filters.items():
+        if key == 'airline_company':
+            id = DAL.get_id_by_name(some_model=Airline_Companies, name=val)
+            if id != None:
+                edited_filters['airline_company_id_id'] = id
+        elif key == 'origin_country' or key == 'destination_country':
+            id = DAL.get_id_by_name(some_model=Countries, name=val)
+            if id != None:
+                edited_filters[key + '_id_id'] = id
+        else:
+            edited_filters[key] = val
+
+    try:
+        flights = Flights.objects.filter(**edited_filters)
+        logger.info("Successfully got flights by parameters.")
+        return flights
+    except Exception as e:
+        err_msg = f"Failed to get flights by parameters, {filters = }. Error: {e}"
+        logger.error(err_msg)
+        return err_msg
+
+
 
 def get_flights_by_airlineID(airline_id:int):
     try: 
