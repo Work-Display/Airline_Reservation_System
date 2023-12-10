@@ -22,6 +22,7 @@ user.register(r"my-own-user", api.MyOwnUserViewSet)
 # ===================================================================================
 admin.register(r"role-for-admins", api.Role4AdminViewSet)
 admin.register(r"user-for-admins", api.User4AdminViewSet)
+admin.register(r"user-for-show", api.ShowUsersViewSet)
 admin.register(r"customer-for-admins", api.Customer4AdminViewSet)
 admin.register(r"airline-for-admins", api.Airline4AdminViewSet)
 admin.register(r"admin-for-admins", api.Admin4AdminViewSet)

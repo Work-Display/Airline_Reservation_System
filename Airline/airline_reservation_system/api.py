@@ -130,7 +130,16 @@ class Customer4AdminViewSet(viewsets.ModelViewSet):
         logger.info(info_msg)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+
+@method_decorator(allowed_roles(['Administrator']), name='dispatch')
+class ShowUsersViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed.
+    """
+    queryset = Users.objects.all().order_by('id')
+    serializer_class = ShowUsersSerializer
+    http_method_names = ['get']
+
 
 @method_decorator(allowed_roles(['Customer']), name='dispatch')
 class Customer4CustomerUserAdd(viewsets.ModelViewSet):
@@ -1168,10 +1177,10 @@ def get_instances_by_name(request):
             image_data = user.thumbnail.read()
             image_base64 = base64.b64encode(image_data).decode('utf-8')
             users_dict[index] = {
-                'username': user.username,
-                'password': user.password,
-                'email': user.email,
+                'id': user.id,
                 'thumbnail': image_base64,
+                'username': user.username,
+                'email': user.email,
                 'user_role_id': user.user_role_id
             }
             instances_dict = users_dict

@@ -54,6 +54,18 @@ class MyOwnUserSerializer(serializers.ModelSerializer):
         # fields = '__all__'
 
 
+class ShowUsersSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.SerializerMethodField()
+
+    def get_thumbnail(self, obj):
+        thumbnail_data = obj.thumbnail.read() 
+        return base64.b64encode(thumbnail_data).decode('utf-8')
+    
+    class Meta:
+        model = Users
+        fields =  ['id', 'thumbnail', 'username', 'email', 'user_role_id']
+
+
 class UserSerializer(serializers.ModelSerializer):
 
     global userFields

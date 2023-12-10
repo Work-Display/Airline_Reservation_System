@@ -107,7 +107,7 @@ function Countries() {
         <form name='search-form'>
           <h3>TIPS:{<br/>}Only one of the filters below can be active at a time.{<br/>}There are 25 pages of countries available,{<br/>}and 249 countries in total.</h3>
           <br/>
-          <hr className='one' style={{width:'56%'}}/>
+          <hr className='one' style={{width:'100%', borderWidth: '1px'}}/>
           <br/>
           <div className="search">
             <TextField
@@ -164,7 +164,7 @@ function Countries() {
                   <br/><br/><br/><br/>
                 </div>
             )}
-        </div>
+      </div>
     </div>
 
   );
