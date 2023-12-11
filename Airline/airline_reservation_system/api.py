@@ -38,11 +38,11 @@ class Role4AdminViewSet(viewsets.ModelViewSet):
 
 class MyOwnUserViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that returns the logged in user object. It is for system use, but it's open for everyone. 'List' and 'Retrieve' act the same. (Couldn't enable only list).
+    API endpoint that returns the logged in user object. It is for system use, but it's open for everyone. 'List' and 'Retrieve' act the same. (Couldn't enable only list). Also, in patch you can only update the thumbnail.
     """
     queryset = Users.objects.all().order_by('id')
     serializer_class = MyOwnUserSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'patch']
 
     def list(self, request):
         user_id = get_user_id_from_session(request=request)
@@ -76,6 +76,31 @@ class MyOwnUserViewSet(viewsets.ModelViewSet):
 
         profile = prepare_profile(user.thumbnail)
     
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'user_role': user.user_role.role_name,
+            'thumbnail': profile
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
+    
+
+    def partial_update(self, request, pk=None):
+        user_id = get_user_id_from_session(request=request)
+        if type(user_id) != int:
+            err_msg = "You are not logged in."
+            return Response(err_msg, status=status.HTTP_404_NOT_FOUND)
+
+        user = Users.objects.get(id=user_id)
+        logger.info(f"1 {user = }")
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        profile = prepare_profile(user.thumbnail)
+
         user_data = {
             'id': user.id,
             'username': user.username,

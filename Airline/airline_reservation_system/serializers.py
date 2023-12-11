@@ -46,12 +46,28 @@ class ProfileImageBytesField(serializers.Field):
 
 
 class MyOwnUserSerializer(serializers.ModelSerializer):
-    thumbnail = ProfileImageBytesField()
-    
     class Meta:
         model = Users
-        fields =  ['id', 'username', 'password', 'email', 'thumbnail', 'user_role_id']
-        # fields = '__all__'
+        fields = ['id', 'username', 'email', 'user_role', 'thumbnail']
+        read_only_fields = ['id', 'username', 'email', 'user_role']
+
+    def update(self, instance, validated_data):
+        if 'thumbnail' in validated_data:
+            uploaded_file = validated_data['thumbnail']
+            try:
+                # Open and validate the uploaded image file
+                im = Image.open(uploaded_file)
+                im.verify()
+                im.close()
+                im = Image.open(uploaded_file)
+                im.transpose(Image.FLIP_LEFT_RIGHT)
+                im.close()
+            except Exception as e:
+                raise serializers.ValidationError("Bad input, patch failed. Can't validate the user's new thumbnail image. The image is corrupted or in an invalid format.")
+            # Save the uploaded image file and update the 'thumbnail' field
+            instance.thumbnail.save(uploaded_file.name, uploaded_file, save=True)
+
+        return instance
 
 
 class ShowUsersSerializer(serializers.ModelSerializer):

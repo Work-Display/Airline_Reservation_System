@@ -20,6 +20,9 @@ function Profile() {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [thumbnail, setThumbnail] = useState('');
+  const [patchErr, setPatchErr] = useState('');
+  const [selectedThumbnail, setSelectedThumbnail] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const isLoggedIn = typeof user === 'object' && user !== null;
 
   useEffect(() => {
@@ -27,10 +30,38 @@ function Profile() {
       setUsername(user.username);
       setEmail(user.email);
       setRole(user.user_role);
-      // setThumbnail(user.thumbnail.substring(user.thumbnail.lastIndexOf("/") + 1));
       setThumbnail(user.thumbnail);
     }
   }, [isLoggedIn]);
+
+  const handleThumbnailChange = (event) => {
+    setSelectedThumbnail(event.target.files[0]);
+  };
+
+  const uploadThumbnail = () => {
+    if (selectedThumbnail) {
+      const formData = new FormData();
+      formData.append('thumbnail', selectedThumbnail);
+
+      client.patch('/user/models/my-own-user/'+ String(user.id) + '/', formData, {
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(progress);
+        },
+      })
+        .then((response) => {
+          // Handle success response
+          console.log(response.data);
+          setThumbnail(response.data.thumbnail);
+          setPatchErr('');
+        })
+        .catch((error) => {
+          // Handle error response
+          console.error(error);
+          setPatchErr([Object.values(error.response.data)]);
+        });
+    }
+  };
 
   if (isLoggedIn === true) {
     return (
@@ -42,8 +73,7 @@ function Profile() {
         <div className="profile-frame">
           <Form name='user-profile'>
             {thumbnail && (
-            // <img className='profile-pic' src={require(`../../../web-design/upload_img/user_thumbnails/${thumbnail}`)} />
-            <img className='profile-pic' src={`data:image/png;base64, ${thumbnail}`} />
+              <img className='profile-pic' src={`data:image/png;base64, ${thumbnail}`} />
             )}
             <br/><br/>
 
@@ -55,6 +85,25 @@ function Profile() {
               <h2 > Role:  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {role} </h2>
             </div>
         
+            <Form.Group>
+              <Form.Label>Change Profile Picture:</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+               capture="user"
+                onChange={handleThumbnailChange}
+              />
+              <br/>
+              {uploadProgress > 0 && <progress value={uploadProgress} max="100" />}
+              <br/>
+              <Button onClick={uploadThumbnail}>Upload</Button>
+              <br/>
+              {patchErr? (
+                  <div className='error'>
+                  <h2>Error: Change failed! {patchErr}</h2>
+                  </div>
+                ) : (<></>)}
+            </Form.Group>
           </Form>
         </div>
 
@@ -65,7 +114,6 @@ function Profile() {
   } else {
     return (
       <div className="App">
-
         <img className='title' src={require('../assets/MyProfile.png')} alt="Title" />
         <br/><br/>
 
