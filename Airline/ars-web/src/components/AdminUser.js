@@ -190,12 +190,12 @@ function AdminUser() {
           <div className='center'>
             <TableCell>
             <h2>Page Number: </h2>
-            <input type="number" name="page" min="1" max="25" onChange={(e) => {setUrl("/admin/models/user-for-show/?page=" + e.target.value); fetchUsers("/admin/models/user-for-show/?page=" + e.target.value);}}/>
+            <input type="number" name="page" min="1" max="100" onChange={(e) => {setUrl("/admin/models/user-for-show/?page=" + e.target.value); fetchUsers("/admin/models/user-for-show/?page=" + e.target.value);}}/>
             <br/><br/>
             </TableCell>
             <TableCell>
             <h2>ID: </h2>
-            <input type="number" min="1" max="249" name="id" onChange={(e) => {setID(e.target.value); fetchUserByID(e.target.value);}}/>
+            <input type="number" min="1" name="id" onChange={(e) => {setID(e.target.value); fetchUserByID(e.target.value);}}/>
             <br/><br/>
             </TableCell>
           </div>

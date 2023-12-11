@@ -1062,9 +1062,18 @@ def populate_all():
     # Flights
     departure = dt.datetime.now().replace(second=0, microsecond=0)
     landing = departure + timedelta(hours=3)
-    flight_FD = {'airline_company_id_id':1, 'origin_country_id_id':1, 'destination_country_id_id':2, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':54}
+    flight_FD = {'airline_company_id_id':1, 'origin_country_id_id':1, 'destination_country_id_id':2, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':1}
     if (DAL.add_instance(some_model=Flights, field_data=flight_FD) == str):
         return False
+    
+    for i in range(15):
+        flight_FD = randomly_generate_flight(airline_id=1)
+        while(validate_b4_add(some_model=Flights, field_data=flight_FD)==False):
+            flight_FD = randomly_generate_flight(airline_id=1)
+        flight_FD['airline_company_id_id'] = flight_FD.pop('airline_company_id')
+        flight_FD['origin_country_id_id'] = flight_FD.pop('origin_country_id')
+        flight_FD['destination_country_id_id'] = flight_FD.pop('destination_country_id')
+        DAL.add_instance(some_model=Flights, field_data=flight_FD)
     
     # Tickets
     tickets_FD = {'flight_id_id':1, 'customer_id_id':1}
@@ -1112,9 +1121,24 @@ def populate_all():
     # Flights
     departure = dt.datetime.now().replace(second=0, microsecond=0)
     landing = departure + timedelta(hours=3)
-    flight_FD = {'airline_company_id_id':2, 'origin_country_id_id':58, 'destination_country_id_id':36, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':3}
+    flight_FD = {'airline_company_id_id':2, 'origin_country_id_id':58, 'destination_country_id_id':36, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':2}
     if (DAL.add_instance(some_model=Flights, field_data=flight_FD) == str):
         return False
+    
+    departure = dt.datetime.now().replace(second=0, microsecond=0) - dt.timedelta(days=1)
+    landing = departure + timedelta(hours=3)
+    flight_FD = {'airline_company_id_id':2, 'origin_country_id_id':58, 'destination_country_id_id':36, 'departure_time':departure, 'landing_time':landing, 'remaining_tickets':2}
+    if (DAL.add_instance(some_model=Flights, field_data=flight_FD) == str):
+        return False
+    
+    for i in range(15):
+        flight_FD = randomly_generate_flight(airline_id=1)
+        while(validate_b4_add(some_model=Flights, field_data=flight_FD)==False):
+            flight_FD = randomly_generate_flight(airline_id=1)
+        flight_FD['airline_company_id_id'] = flight_FD.pop('airline_company_id')
+        flight_FD['origin_country_id_id'] = flight_FD.pop('origin_country_id')
+        flight_FD['destination_country_id_id'] = flight_FD.pop('destination_country_id')
+        DAL.add_instance(some_model=Flights, field_data=flight_FD)
     
     # Tickets
     tickets_FD = {'flight_id_id':2, 'customer_id_id':2}
