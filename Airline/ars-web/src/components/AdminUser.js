@@ -27,24 +27,23 @@ function AdminUser() {
   const [addUserErr, setAddUserErr] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const [url, setUrl] = useState("http://127.0.0.1:8000/admin/models/user-for-show/?page=1");
+  const [url, setUrl] = useState("/admin/models/user-for-show/?page=1");
   const [id, setID] = useState(1);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState([]);
  
   async function fetchUsers (url) {
     let myResponse = '';
-    await fetch(url)
+    await client.get(url)
       .then(response => {
         myResponse = response;
         console.log("fetchUsers : ", response);
-        console.log("fetchUsers response.data : ", response.data);
-        return response.json();
+        return response;
       })
       .then(data => {
         if (myResponse.status === 200){
           console.log("id data = ",data);
-          setPage(data.results);
+          setPage(data.data.results);
         }else{
           setPage([]);
         }
@@ -57,16 +56,16 @@ function AdminUser() {
 
     if (id){
       let myResponse = '';
-    await fetch("http://127.0.0.1:8000/admin/models/user-for-show/"+id)
+      await client.get("/admin/models/user-for-show/"+id)
       .then(response => {
         myResponse = response;
         console.log("fetchUserByID : ", response);
-        return response.json();
+        return response;
       })
       .then(data => {
         if (myResponse.status === 200){
-          console.log("id data = ",data);
-          setPage([data]);
+          console.log("id data = ",data.data);
+          setPage([data.data]);
         }else{
           setPage([]);
         }
@@ -75,7 +74,7 @@ function AdminUser() {
       })
     }
     else{
-      fetchUsers("http://127.0.0.1:8000/admin/models/user-for-show/?page=1");
+      fetchUsers("/admin/models/user-for-show/?page=1");
     }
   }
   
@@ -191,7 +190,7 @@ function AdminUser() {
           <div className='center'>
             <TableCell>
             <h2>Page Number: </h2>
-            <input type="number" name="page" min="1" max="25" onChange={(e) => {setUrl("http://127.0.0.1:8000/admin/models/user-for-show/?page=" + e.target.value); fetchUsers("http://127.0.0.1:8000/admin/models/user-for-show/?page=" + e.target.value);}}/>
+            <input type="number" name="page" min="1" max="25" onChange={(e) => {setUrl("/admin/models/user-for-show/?page=" + e.target.value); fetchUsers("/admin/models/user-for-show/?page=" + e.target.value);}}/>
             <br/><br/>
             </TableCell>
             <TableCell>
@@ -202,7 +201,7 @@ function AdminUser() {
           </div>
           
           <br/>
-          <input type="reset" onClick={(e) => {fetchUsers("http://127.0.0.1:8000/admin/models/user-for-show/?page=1"); setSearch('');}}/>
+          <input type="reset" onClick={(e) => {fetchUsers("/admin/models/user-for-show/?page=1"); setSearch('');}}/>
           <br/>          
         </form>
       </div>
