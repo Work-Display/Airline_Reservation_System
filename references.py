@@ -8,6 +8,10 @@
         # python.exe -m venv .venv
         # .\.venv\Scripts\activate
 
+    # Venv in linux:
+        # python -m venv .venv
+        # source .venv/bin/activate
+
     # Django:
         # python manage.py makemigrations
         # python manage.py migrate
@@ -28,6 +32,14 @@
         # pre-deployment: 
             # npm run build 
             # npm start build 
+
+    # RTS - To clone your private repo you need to gen an ssh-key on that machine and then add it to your account:
+        # ssh-keygen -t ed25519 -C "yourmail@gmail.com"
+        # associate the pub key with your account.
+        # eval `ssh-agent -s`
+        # ssh-add /path/to/key/.ssh/id_ed25519
+        # clone with the ssh link.
+        # * to clone a specific branch from it: git clone -b deployment git@github.com:minus0plus/ARS.git
 
 
 # ===========================================================================================================================
@@ -664,16 +676,24 @@
 
 # ===========================================================================================================================
 # Deployment:
+    # Django:
+        # azure:
+            # https://stackoverflow.com/questions/65431326/django-app-on-azure-not-getting-static-files
+            # https://stackoverflow.com/questions/66821626/django-doesnt-load-build-static-files-reactjs
+        # pythonanywhere:
+            # https://whitenoise.readthedocs.io/en/latest/django.html
+            # https://stackoverflow.com/questions/42399671/how-to-set-up-django-mysql-database-on-pythonanywhere
+            # https://stackoverflow.com/questions/61578172/pythonanywhere-could-not-install-packages-due-to-an-environmenterror-errno-12
 
-    # https://stackoverflow.com/questions/65431326/django-app-on-azure-not-getting-static-files
-    # https://stackoverflow.com/questions/66821626/django-doesnt-load-build-static-files-reactjs
-    # https://www.atatus.com/blog/host-react-app-for-free/#firebase
-    # https://stackoverflow.com/questions/72236942/react-application-built-on-top-of-firebase-renders-404-on-page-refresh
-    # https://stackoverflow.com/questions/46235798/relative-path-in-index-html-after-build
-    # https://stackoverflow.com/questions/62992831/python-session-samesite-none-not-being-set
-    # https://stackoverflow.com/questions/45122296/firebase-pass-url-param-in-url-rewrite
-    # https://whitenoise.readthedocs.io/en/latest/django.html
+    # React:
+        # firebase:
+            # https://www.atatus.com/blog/host-react-app-for-free/#firebase
+            # https://stackoverflow.com/questions/72236942/react-application-built-on-top-of-firebase-renders-404-on-page-refresh
+            # https://stackoverflow.com/questions/46235798/relative-path-in-index-html-after-build
+            # https://stackoverflow.com/questions/62992831/python-session-samesite-none-not-being-set
+            # https://stackoverflow.com/questions/45122296/firebase-pass-url-param-in-url-rewrite
 
+    
 # ===========================================================================================================================
 # Docker:
 
