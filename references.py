@@ -3,32 +3,27 @@
 # It exists only to make things easier for myself when working on this, or returning to this in the future. 
 
 # CMDs: =====================================================================================================================
+    
+    # Django:
+        # python.exe -m venv .venv
+        # .\.venv\Scripts\activate
 
-    # python manage.py makemigrations
-    # python manage.py migrate
+        # python manage.py makemigrations
+        # python manage.py migrate
 
-    # python.exe -m venv .venv
-    # .\.venv\Scripts\activate
-    # pip freeze > requirements.txt
-    # pip install -r requirements.txt 
-
-    # Use the line below after running 'npm run build'
-        # python manage.py collectstatic
+        # pip freeze > requirements.txt
+        # pip install -r requirements.txt 
 
     # Superuser:
         # username: Cat
         # password: Murka1234
 
-    # pytest ./tests/airline_reservation_system/test_utiles.py::Test_Populate_All
-    # pytest ./tests/airline_reservation_system/test_utiles.py::Test_Val_Add_User
-    # pytest ./tests/airline_reservation_system/test_utiles.py::Test_For_Missing_Migrations
+    # Set the API counter manually:
+        # python manage.py set_apicounter <value>
 
     # React:
         # before deployment: npm run build 
         # for deployment use: npm start build 
-
-    # Set the API counter manually:
-        # python manage.py set_apicounter <value>
 
 # ===========================================================================================================================
 # 95% --> Django refs:

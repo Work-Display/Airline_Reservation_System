@@ -49,6 +49,7 @@ function AdminUser() {
         }
       }).catch(error => {
         console.log(error);
+        setPage([]);
       })
   }
   
@@ -71,6 +72,7 @@ function AdminUser() {
         }
       }).catch(error => {
         console.log("This error:", error);
+        setPage([]);
       })
     }
     else{

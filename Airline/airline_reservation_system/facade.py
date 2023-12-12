@@ -3,13 +3,10 @@ from .utiles import update_role_session, val_up_customer, val_add_customer
 from datetime import datetime
 from .models import *
 from .validators import *
-from abc import ABC, abstractmethod
-from django.contrib.auth.models import update_last_login
+from abc import ABC
 from django.contrib.auth import login, authenticate, logout
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import update_last_login
 from django.http import request
-from django.views.decorators.csrf import csrf_exempt
 import logging 
 logger = logging.getLogger("pick.me") 
 

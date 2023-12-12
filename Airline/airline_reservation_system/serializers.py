@@ -1,5 +1,4 @@
-from django.http import HttpResponse, request
-from rest_framework import serializers, status
+from rest_framework import serializers
 from .models import *
 from .dal import DAL
 from .validators import *

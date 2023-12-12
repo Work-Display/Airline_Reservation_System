@@ -9,13 +9,8 @@ from phonenumber_field.validators import validate_international_phonenumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import request
 import base64
-import numpy as np
-import faker
 import random
-import names
-import phone_gen
-from randimage import get_random_image, show_array
-import matplotlib
+from randimage import get_random_image
 import random_address
 import randominfo
 from random_username.generate import generate_username

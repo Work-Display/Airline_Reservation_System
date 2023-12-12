@@ -12,7 +12,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
-from django.contrib.auth.models import update_last_login
 from django.contrib.auth import logout
 from .decorators import *
 from django.utils.decorators import method_decorator

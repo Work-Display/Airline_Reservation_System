@@ -53,6 +53,7 @@ function AdminCustomer() {
         }
       }).catch(error => {
         console.log(error);
+        setCustomers([]);
       })
   }
 

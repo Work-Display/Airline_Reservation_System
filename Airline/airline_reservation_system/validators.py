@@ -1,7 +1,3 @@
-# Will be used by facade.py before sending add/update requests to dal.py, in order to prevent the input of invalid/illogical data.
-# And while at it, prevent the waste of DB server resources on bad requests.
-
-from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 import re
 from airline_reservation_system.models import *
@@ -9,10 +5,8 @@ from airline_reservation_system.dal import DAL, get_role_by_user
 from PIL import Image
 import filetype
 import datetime as dt
-import pytz
 from django.db.models import Q
 from phonenumber_field.validators import validate_international_phonenumber
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 import logging 
 logger = logging.getLogger("pick.me") 
@@ -296,18 +290,6 @@ def validate_customer(customer_field_data:dict):
                 error_msg = f"Bad input. Failed to validate a customer. '{key}'(={raw_val}) isn't valid. error: {e}"
                 logger.error(error_msg)
                 return False
-            # val = str(val)
-            # phone_no = val
-            # raw_val = r'{}'.format(val)
-            # raw_val = re.sub(r'[^0-9+]', "", raw_val)
-            # if not(re.match(r'^\+((?:9[679]|8[035789]|6[789]|5[90]|42|3[578]|2[1-689])|9[0-58]|8[1246]|6[0-6]|5[1-8]|4[013-9]|3[0-469]|2[70]|7|1)(?:\W*\d){0,13}\d$', raw_val)):
-            # error_msg = f"Bad input. Failed to validate a customer. '{key}'(={raw_val}) isn't valid."
-            # logger.error(error_msg)
-            # return False
-            # if ( Customers.objects.filter(phone_no=phone_no).exists() ):
-            # error_msg = f"Bad input. Failed to validate a customer.'phone_no'(={phone_no}) is already in use by another customer."
-            # logger.error(error_msg)
-            # return False
         
         if key=='credit_card_no':
             val = str(val)

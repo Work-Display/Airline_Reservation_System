@@ -48,6 +48,7 @@ function AdminAirline() {
         }
       }).catch(error => {
         console.log(error);
+        setAirlines([]);
       })
   }
 

@@ -53,6 +53,7 @@ function Admin() {
         }
       }).catch(error => {
         console.log(error);
+        setAdmins([]);
       })
   }
 
