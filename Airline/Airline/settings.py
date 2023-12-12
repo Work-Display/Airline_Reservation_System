@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -142,20 +143,10 @@ DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 
 # STATIC : =================================================================================================================
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'ars-web\\build\static'),
-# ]
-
-# STATIC_URL = '/static/'
-
-STATIC_URL = '/web-design/'
-
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# MEDIA_URL = '/media/'
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'static\static\media')
+os.path.join(BASE_DIR, "/web-design/staticfiles-django/")
+STATIC_URL = "/web-design/staticfiles-django/"
+STATIC_ROOT = BASE_DIR + "/web-design/staticfiles-django/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # TEMPLATES :  =============================================================================================================

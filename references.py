@@ -4,16 +4,19 @@
 
 # CMDs: =====================================================================================================================
     
-    # Django:
+    # Venv in windows:
         # python.exe -m venv .venv
         # .\.venv\Scripts\activate
 
+    # Django:
         # python manage.py makemigrations
         # python manage.py migrate
 
-        # pip freeze > requirements.txt
-        # pip install -r requirements.txt 
-
+        # pre-deployment:
+            # python.exe .\manage.py collectstatic
+            # pip freeze > requirements.txt
+            # pip install -r requirements.txt 
+        
     # Superuser:
         # username: Cat
         # password: Murka1234
@@ -22,8 +25,10 @@
         # python manage.py set_apicounter <value>
 
     # React:
-        # before deployment: npm run build 
-        # for deployment use: npm start build 
+        # pre-deployment: 
+            # npm run build 
+            # npm start build 
+
 
 # ===========================================================================================================================
 # 95% --> Django refs:
@@ -667,6 +672,7 @@
     # https://stackoverflow.com/questions/46235798/relative-path-in-index-html-after-build
     # https://stackoverflow.com/questions/62992831/python-session-samesite-none-not-being-set
     # https://stackoverflow.com/questions/45122296/firebase-pass-url-param-in-url-rewrite
+    # https://whitenoise.readthedocs.io/en/latest/django.html
 
 # ===========================================================================================================================
 # Docker:
