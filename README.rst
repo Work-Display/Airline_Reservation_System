@@ -5,18 +5,22 @@ Airline Reservation System
 
 Disclaimer
 ----------
-This "Airline Reservation System" is just an unprofessional project which was made by a total beginner for the sake of learning. 
+This "Airline Reservation System" is just an unprofessional project which was made by a total beginner for the sake of learning. It has no real world use.
 
-It has no real world use.
+*** NO LONGER DEPLOYED!!! *** - Ignore the "Quickstart" section.
 
-And please be patient because my system runs slowly. 
+Feel free to try to make it work locally. Here're some TIPS for that:
+
+* When you get field mismatch errors in dal, it's because in model._meta.get_fields, I changed 'reverse' to 'False'. (I made many such bad practices here, but now thanks to that I know better).
+
+* If the initial data isn't enough for you, use "http://127.0.0.1:8000/admin/randomly_populate_all/" to automatically generate more.
 
 
 
 
 Description
 ----------
-As its name suggests, this system allows airlines to display information about upcoming flights to the public, and provides a flight reservation customer service.
+As its name suggests, this system allows airlines to display information about upcoming flights to the public, and provides flight reservation customer service.
 
 From now on I'll be referring to this "Airline Reservation System" as "ARS" for short.
 
@@ -64,13 +68,11 @@ Steps:
 
 Steps:
 
-1. Connect to the internet.
+1. Open a browser, preferably Firefox (it looks its best there).
 
-2. Open a browser, preferably Firefox (it looks its best there).
+2. Go to: https://sky-seat-saver.web.app.
 
-3. Go to: https://sky-seat-saver.web.app.
-
-* What do you mean by 'hiccups'? - Don't refresh the buy_ticket page. The navbar even disappeared once seemingly randomly. It looks even worse there than it does locally. There are probably many more bugs which I haven't had the displeasure nor time to discover yet.
+* What do you mean by 'hiccups'? - Don't refresh the buy_ticket page. There are probably more bugs which I haven't had the displeasure nor time to discover yet.
 
 
 
@@ -80,30 +82,11 @@ Steps:
 
 Steps:
 
-1. Connect to the internet.
+1. Open a browser, preferably Firefox.
 
-2. Open a browser, preferably Firefox.
+2. Go to: https://ars-api.azurewebsites.net/api/.
 
-3. Go to: https://ars-api.azurewebsites.net/api/.
-
-* Why the hate? - I haven't even tried using the whole system via APIs only. I only ever directly used each API once or twice, immediately after writing it. The APIs were pretty much built for internal system use only, or in other words, to be used by the react UI behind the scenes. Also, this too, for some cursed reason, looks worse in deployment. All the APIs were under one title locally, but there it's all separated into ugly sub-titles. Oh and my 'id_id' variable name blunder is in full display there.
-
-
-
-
-
-Testing
-----------
-I started by writing relatively a lot of tests. In hindsight, I really shouldn't have done it. 
-
-And that's because I mostly ended up using only a small portion of that stuff. Unfortunately, I haven't had the time to test all the parts that I ended up using. 
-
-Most of it was only tested manually by a very sleepy me. Not very reliable, I know, and my final grade will surely know it too.
-
-I didn't even write a postman collection.
-
-So glad and so sad simultaneously that my future self will never have an access to a time machine.
-
+* Why the hate? - The APIs were pretty much built for internal system use only, or in other words, to be used by the react UI behind the scenes. 
 
 
 
@@ -111,7 +94,7 @@ So glad and so sad simultaneously that my future self will never have an access 
 
 Useful
 ----------
-Generate DATA quickly (just some websites that I found):
+Generate fake valid DATA quickly (just some websites that I found):
 
 * https://www.prepostseo.com/tool/fake-address-generator
 
@@ -121,9 +104,9 @@ Generate DATA quickly (just some websites that I found):
 
 
 
-Some pre-made USERS (Registered = users that have an existing instance in their designated role's table) :
+Some premade USERS (Registered = users that have an existing instance in their designated role's table) :
 
-[ Please use them only to view the UI from their respective perspective. Don't do any create/update/delete with them. Create your own users for that. ]
+[ Please use them only to view the UI from their respective perspective. ]
 
 
 * ADMINS:
