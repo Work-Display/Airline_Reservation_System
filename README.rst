@@ -34,7 +34,7 @@ There are 3 ways to use this system, and I'll start from giving instructions on 
 
 
 
-1 - MOST RECOMMENDED WAY TO USE THIS SYSTEM | DOCKER IMAGE UI :
+1 - DOCKER IMAGE UI :
 
 Steps:
 
@@ -42,51 +42,45 @@ Steps:
 
 2. Run your docker daemon.
 
-3. Pull my image, it's called "ars-web" : https://hub.docker.com/r/minus0plus/ars-web.
+3. Pull my image, it's called "sky-soar" : https://hub.docker.com/r/minus0plus/sky-soar.
 
 .. code-block::
 
-    $ docker pull minus0plus/ars-web
+    $ docker pull minus0plus/sky-soar
 
 
-4. Run it, either via the Docker Desktop app, or via the terminal like so: "docker run -dp <insert your chosen unoccupied port number>:3000 --name <insert your chosen container name> ars-web:latest". Example:
+4. Run it, either via the Docker Desktop app, or via the terminal like so: "docker run -dp <insert your chosen unoccupied port number>:3000 --name <insert your chosen container name> minus0plus/sky-soar:latest". Example:
 
 .. code-block::
 
-    $ docker run -dp 3002:3000 --name ars-example-container minus0plus/ars-web:latest
+    $ docker run -dp 3002:3000 --name sky-soar-container minus0plus/sky-soar:latest
 
 
-* Why is it the most recommended way? - Because my deployed react frontend has all sorts of silly bugs, and its appearance is inconsistent with browser changes.
-
-* What is this image for? - This image is only for my system's react frontend UI. (The django backend is deployed separately on azure).
+5. Wait a few minutes while it loads for the first time.
 
 
 
 
 
-2 - WILL WORK WITH OCCASIONAL HICCUPS ...PROBABLY. | FIREBASE HOST UI :
+2 - FIREBASE HOST UI :
 
 Steps:
 
 1. Open a browser, preferably Firefox (it looks its best there).
 
-2. Go to: https://sky-seat-saver.web.app.
-
-* What do you mean by 'hiccups'? - Don't refresh the buy_ticket page. There are probably more bugs which I haven't had the displeasure nor time to discover yet.
+2. Go to: https://sky-soar.web.app.
 
 
 
 
 
-3 - IF YOU REALLY HATE YOURSELF | AZURE HOST API :
+3 - AZURE HOST API :
 
 Steps:
 
 1. Open a browser, preferably Firefox.
 
-2. Go to: https://ars-api.azurewebsites.net/api/.
-
-* Why the hate? - The APIs were pretty much built for internal system use only, or in other words, to be used by the react UI behind the scenes. 
+2. Go to: https://sky-soar.azurewebsites.net/api/.
 
 
 
