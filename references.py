@@ -32,6 +32,7 @@
         # pre-deployment: 
             # npm run build 
             # npm start build 
+        # firebase deploy 
 
     # RTS - To clone your private repo you need to gen an ssh-key on that machine and then add it to your account:
         # ssh-keygen -t ed25519 -C "yourmail@gmail.com"

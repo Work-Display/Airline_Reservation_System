@@ -68,7 +68,7 @@ Steps:
 
 1. Open a browser, preferably Firefox (it looks its best there).
 
-2. Go to: https://sky-soar.web.app.
+2. Go to: https://sky-seat-saver.web.app.
 
 
 
