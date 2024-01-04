@@ -93,7 +93,7 @@ def prepare_profile(profile:str):
 
 def validate_and_return_userFD(user_field_data:dict):
     """
-    validates and adds a user.
+    validates and returns a user's fields dictionary.
     returns false if validation fails and vise versa.
     Send raw unencrypted password only.
     """
